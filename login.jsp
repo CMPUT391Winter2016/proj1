@@ -1,5 +1,6 @@
 <%@ page import="java.sql.*" %> 
-<% if(request.getParameter("submit") != null) { 
+<% int valid = 0;
+if(request.getParameter("submit") != null) { 
 //get the user input from the login page 
 String userName = (request.getParameter("username")).trim();
 String passwd = (request.getParameter("password")).trim();%>
@@ -40,8 +41,17 @@ String truepwd = "";
 while(rset != null && rset.next()) truepwd = (rset.getString(1)).trim();
 //display the result 
 out.println("<p>");
-if(passwd.equals(truepwd)) out.println("Your Login is Successful!"); 
-else out.println("Either your userName or your password is invalid!");
+
+if(passwd.equals(truepwd))
+{
+ out.println("Your Login is Successful!"); 
+ valid = 1;
+}
+else
+{ 
+  valid = 0;
+  out.println("Either your userName or your password is invalid!");
+}
 out.println("</p>");
 try{ conn.close();
  } catch(Exception ex){ out.println("" + ex.getMessage() + "");
@@ -51,7 +61,23 @@ out.println("null!!");
 out.println("UserName:");
 out.println("Password:");
 out.println("");
-out.println(""); } %> 
+out.println(""); } 
+
+//Based on the input redirect to either an error home page or success
+if (valid == 0)
+{
+   response.setStatus(response.SC_MOVED_TEMPORARILY);
+   response.setHeader("Location", "error_home.html");
+}
+else
+{
+   String userName = (request.getParameter("username")).trim(); 
+   session.setAttribute("userName", userName);
+   response.setStatus(response.SC_MOVED_TEMPORARILY);
+   response.setHeader("Location", "success.jsp");
+}
+
+%> 
 
 </body>
 </html>
