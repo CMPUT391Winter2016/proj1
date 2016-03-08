@@ -13,32 +13,34 @@ String passwd = (request.getParameter("password")).trim();%>
 <%
 //establish the connection to the underlying database
 Connection conn = null;
-String driverName = "oracle.jdbc.driver.OracleDriver";
-String dbstring = "jdbc:oracle:thin:@gwynne.cs.ualberta.ca:1521:CRS";
+String driverName = session.getAttribute("dbdriver").toString();
+String dbstring = session.getAttribute("dbstring").toString();
+String dbname = session.getAttribute("dbname").toString();
+String dbpassword = session.getAttribute("dbpassword").toString();
 try{ 
 //load and register the driver 
 Class drvClass = Class.forName(driverName);
 DriverManager.registerDriver((Driver) drvClass.newInstance());
- } catch(Exception ex){ out.println("" + ex.getMessage() + "");
+ } catch(Exception ex){ out.println("" + ex.getMessage() + "broke");
 	 }
  try{ 
 //establish the connection 
-conn = DriverManager.getConnection(dbstring,"nlovas","D4v3spr1t3");
+conn = DriverManager.getConnection(dbstring,dbname, dbpassword);
 conn.setAutoCommit(false);
- } catch(Exception ex){ out.println("" + ex.getMessage() + "");
+ } catch(Exception ex){ out.println(dbstring + ex.getMessage() + dbname);
 	 }
 //select the user table from the underlying db and validate the user name and password
 Statement stmt = null;
 ResultSet rset = null;
-String sql = "select PWD from login where id = '"+userName+"'";
+String sql = "select password from users where user_name = '"+userName+"'";
 out.println(sql);
 try{ 
 stmt = conn.createStatement();
 rset = stmt.executeQuery(sql);
-} catch(Exception ex){ out.println("" + ex.getMessage() + "");
+} catch(Exception ex){ out.println("broke" + ex.getMessage() + "");
 	 }
 String truepwd = "";
-while(rset != null && rset.next()) truepwd = (rset.getString(1)).trim();
+while(rset != null && rset.next()) truepwd = rset.getString("password").trim();
 //display the result 
 out.println("<p>");
 
@@ -66,8 +68,8 @@ out.println(""); }
 //Based on the input redirect to either an error home page or success
 if (valid == 0)
 {
-   response.setStatus(response.SC_MOVED_TEMPORARILY);
-   response.setHeader("Location", "error_home.html");
+   //response.setStatus(response.SC_MOVED_TEMPORARILY);
+   //response.setHeader("Location", "error_home.html");
 }
 else
 {
