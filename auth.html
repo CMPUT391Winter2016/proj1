@@ -1,0 +1,32 @@
+<html>
+<head> <title> JDBC Interface </title> </head>
+
+<body>
+<h3>Connect to the Database</h3>
+<form mothod = "post" action="auth.jsp">
+<table>
+<tr>
+<td>Username: </td>
+<td> <input type='text'value = 'Username' name='dbname'> </td>
+
+<tr>
+<td>Password: </td>
+<td> <input type='password'value = '****' name='dbpassword'> </td>
+
+<tr>
+<td>Driver Name: </td>
+<td> <input type='text'value = 'oracle.jdbc.driver.OracleDriver'
+	    name='dbdriver'> </td>
+
+<tr>
+<td>DB String: </td>
+<td> <input type='text'value =
+	    'jdbc:oracle:thin:@gwynne.cs.ualberta.ca:1521:CRS' name='dbstring'> </td>
+</table>
+
+<input type = submit value = "Connect">
+<input type = reset >
+</form>
+
+</body>
+</html>
