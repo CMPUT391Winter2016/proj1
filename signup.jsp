@@ -12,6 +12,24 @@ String phone = (request.getParameter("phone")).trim();
 
 phone=phone.replaceAll("\\D+",""); //remove unnecessary characters
 
+//check to see if username, password, and email are not blank
+if(userName.equals("") || passwd.equals("") || email.equals("")){
+//redirect to page with an error message
+
+//put code here!!!
+
+}
+
+//check that a valid email was entered that uses an "@" symbol
+if(!email.contains("@")){
+//redirect to page with an error message
+
+//put code here!!!
+
+}
+
+
+
 
 out.println("Your input User Name is "+userName+"<p>");
 
@@ -19,19 +37,27 @@ out.println("Your input password is "+passwd+"<p>");
 
 //establish the connection to the underlying database
 Connection conn = null;
-String driverName = "oracle.jdbc.driver.OracleDriver";
-String dbstring = "jdbc:oracle:thin:@gwynne.cs.ualberta.ca:1521:CRS";
+
+//get database info from the session (auth.html)
+
+String DBdriver = session.getAttribute("dbdriver").toString();
+String DBname = session.getAttribute("dbname").toString();
+String DBpw = session.getAttribute("dbpassword").toString();
+String DBstring = session.getAttribute("dbstring").toString();
+
 
 try{ 
 //load and register the driver 
-Class drvClass = Class.forName(driverName);
+Class drvClass = Class.forName(DBdriver);
 DriverManager.registerDriver((Driver) drvClass.newInstance());
  } catch(Exception ex){ out.println("" + ex.getMessage() + "");
 	 }
 
+
  try{ 
 //establish the connection 
-conn = DriverManager.getConnection(dbstring,"nlovas","D4v3spr1t3");
+//conn = DriverManager.getConnection(dbstring,"nlovas","D4v3spr1t3");
+conn = DriverManager.getConnection(DBstring,DBname,DBpw);
 conn.setAutoCommit(false);
  } catch(Exception ex){ out.println("" + ex.getMessage() + "");
 	 }
