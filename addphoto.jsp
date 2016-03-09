@@ -28,6 +28,7 @@ DriverManager.registerDriver((Driver) drvClass.newInstance());
  try{ 
 //establish the connection 
 conn = DriverManager.getConnection(DBstring,DBname,DBpw);
+conn.setAutoCommit(false);
  } catch(Exception ex){ out.println("" + ex.getMessage() + "");
 	 }
 
@@ -38,7 +39,9 @@ ResultSet rset1 = stmt.executeQuery("SELECT pic_id_sequence.nextval from dual");
 rset1.next();
 photo_id = rset1.getInt(1);
 
-stmt.execute("INSERT INTO images values("+photo_id+", null, null, null, null, null, null, null, empty_blob())");
+String userName = session.getAttribute("userName").toString();
+
+stmt.execute("INSERT INTO images values("+photo_id+",'"+userName+"', null, null, null, null, null, null, empty_blob())");
 ResultSet rset = stmt.executeQuery("SELECT * from images where photo_id = "+photo_id+" for update");
 rset.next();
 BLOB myblob = ((OracleResultSet)rset).getBLOB(9);
@@ -52,5 +55,11 @@ instream.close();
 outstream.close();
 stmt.executeUpdate("commit");
 conn.close();
-out.println("Success");
 %>
+<html>
+<head>
+<title>Photo Upload</title>
+</head>
+
+<body>
+<a href="success.jsp">Home</a>
