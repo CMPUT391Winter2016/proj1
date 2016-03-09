@@ -9,7 +9,8 @@
 
 <h1>Hello <%=session.getAttribute("userName")%></h1>
 <p>What do you want to do now?<p>
-
+<a href="addphoto.html">Add Photo</a>
+<a href="">Search Photos</a>
 </body>
 
 </html>
