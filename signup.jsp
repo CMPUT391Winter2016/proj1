@@ -105,6 +105,8 @@ username_in_use=false;
 
 		//set the session username
 		session.setAttribute("userName", userName);
+		response.setStatus(response.SC_MOVED_TEMPORARILY);
+  		response.setHeader("Location", "success.jsp");
 		
 
 		} else { //the email is already in use
@@ -129,33 +131,3 @@ out.println("Password:");
 out.println("");
 out.println(""); } 
 %> 
-
-
-
-
-<html>
-<head>
-<title>Sign up!</title>
-</head>
-<body>
-
-<table border="1" width = "1650" height = "1000" cellpadding = "15" cellspacing = "10" bgcolor="#bedbeb">
-
-<tr bgcolor="#FFFFFF">
-<td height = "20%">put header here</td>
-</tr>
-
-<tr bgcolor="#FFFFFF">
-<td>
-
-Welcome, <%=session.getAttribute("userName")%>!
-
-<br>
-
-</td>
-</tr>
-
-</table>
-
-</body>
-</html>
