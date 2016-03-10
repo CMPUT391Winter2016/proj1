@@ -1,6 +1,6 @@
 <%@ page import="java.sql.* , java.io.*" %> 
 <% if(request.getParameter("ssubmit") != null) { 
-//get the user input from the login page 
+//get the user input from the signup page 
 String userName = (request.getParameter("username")).trim().toLowerCase();
 String passwd = (request.getParameter("password")).trim(); 
 
@@ -16,24 +16,20 @@ phone=phone.replaceAll("\\D+",""); //remove unnecessary characters
 if(userName.equals("") || passwd.equals("") || email.equals("")){
 //redirect to page with an error message
 
-//put code here!!!
+   response.setStatus(response.SC_MOVED_TEMPORARILY);
+   response.setHeader("Location", "error_signup.html");
 
 }
 
-//check that a valid email was entered that uses an "@" symbol
-if(!email.contains("@")){
+//check that the phone number is not too long
+if(phone.length()>10){
 //redirect to page with an error message
 
-//put code here!!!
+   response.setStatus(response.SC_MOVED_TEMPORARILY);
+   response.setHeader("Location", "error_phone_signup.html");
 
 }
 
-
-
-
-out.println("Your input User Name is "+userName+"<p>");
-
-out.println("Your input password is "+passwd+"<p>");
 
 //establish the connection to the underlying database
 Connection conn = null;
@@ -83,14 +79,19 @@ rset = stmt.executeQuery(sql);
 } catch(Exception ex){ out.println("" + ex.getMessage() + "");
 	 }
 
+boolean username_in_use=true;
+boolean email_in_use=true;
+
 
 if(!rset.next()){ //if no matches, it's an unused username
-out.println(userName+" is not currently in use.<p>");
+//out.println(userName+" is not currently in use.<p>");
+username_in_use=false;
 
 	eRset = stmt.executeQuery(email_check);
 
 	if(!eRset.next()){ //if their email is also not currently in use
-		out.println(email+" is not currently in use");
+		//out.println(email+" is not currently in use");
+		email_in_use = false;
 
 		//store this username in the database
 		String addstring = "insert into users values('" +userName+ "','" +passwd+ "', SYSDATE)";
@@ -102,13 +103,22 @@ out.println(userName+" is not currently in use.<p>");
 		"')";
 		stmt.executeQuery(addstring2);
 
+		//set the session username
+		session.setAttribute("userName", userName);
+		response.setStatus(response.SC_MOVED_TEMPORARILY);
+  		response.setHeader("Location", "success.jsp");
+		
 
 		} else { //the email is already in use
-			out.println(email+" is already in use.");
+			//out.println(email+" is already in use.");
+		response.setStatus(response.SC_MOVED_TEMPORARILY);
+   		response.setHeader("Location", "error_in_use_signup.html");
 			}
 
 	} else { //someone already is using this user name
-	out.println("<p>Sorry, this username is already in use.");
+	response.setStatus(response.SC_MOVED_TEMPORARILY);
+   	response.setHeader("Location", "error_in_use_signup.html");
+	
 	}
 
 try{ conn.close();
