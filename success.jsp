@@ -13,7 +13,7 @@
 </tr>
 
 <tr bgcolor="#FFFFFF">
-<td height = "3%" cellpadding="30" cellspacing = "30">|| <a href="addphoto.html">Add Photo</a> | 
+<td height = "3%" cellpadding="30" cellspacing = "30">|| Home | <a href="addphoto.html">Add Photo</a> | 
 <a href="">Search Photos</a> | Groups ||</td>
 </tr>
 
