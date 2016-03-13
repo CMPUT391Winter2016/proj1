@@ -13,8 +13,10 @@
 </tr>
 
 <tr bgcolor="#FFFFFF">
-<td height = "3%" cellpadding="30" cellspacing = "30">|| Home | <a href="addphoto.html">Add Photo</a> | 
-<a href="">Search Photos</a> | Groups ||</td>
+
+<td height = "3%" cellpadding="30" cellspacing = "30">|| <a href="addphoto.html">Add Photo</a> | 
+<a href="PictureBrowse.html">Search Photos</a> | Groups ||</td>
+
 </tr>
 
 <tr bgcolor="#FFFFFF">
@@ -22,6 +24,7 @@
 
 <h1>Hello <%=session.getAttribute("userName")%></h1>
 <p>What do you want to do now?<p>
+
 
 
 <br>
