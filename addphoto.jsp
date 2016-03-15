@@ -1,13 +1,42 @@
-<%@ page import="org.apache.commons.fileupload.DiskFileUpload, org.apache.commons.fileupload.FileItem, java.io.*, java.sql.*, java.util.*, oracle.sql.*, oracle.jdbc.*" %>
-<%! int photo_id; %>
+<%@ page import="org.apache.commons.fileupload.DiskFileUpload, org.apache.commons.fileupload.FileItem, java.io.*, java.sql.*, java.util.*, oracle.sql.*, oracle.jdbc.*, java.text.SimpleDateFormat" %>
+<%! int photo_id;
+    String subject, location, description, date;
+    //java.sql.Date date; %>
 <%
 DiskFileUpload fu = new DiskFileUpload();
 List FileItems = fu.parseRequest(request);
 Iterator i = FileItems.iterator();
-FileItem item = (FileItem) i.next();
-while (i.hasNext() && item.isFormField())
+FileItem temp = (FileItem) i.next();
+FileItem item = null;
+while (i.hasNext())
 {
-	item = (FileItem) i.next();
+	if(temp.isFormField()){
+	if(temp.getFieldName().equals("subject"))
+	{
+	  subject = temp.getString();
+	}
+	else if (temp.getFieldName().equals("location"))
+	{
+	  location = temp.getString();
+	}
+	else if (temp.getFieldName().equals("description"))
+	{
+	  description = temp.getString();
+	} else if (temp.getFieldName().equals("date"))
+	{
+	  //SimpleDateFormat format = new SimpleDateFormat("mm-dd-yyyy");
+	  //java.util.Date tdate = format.parse(temp.getString());
+	  //date = new java.sql.Date(tdate.getTime());
+	  date = temp.getString();
+	  out.println(date);
+	}
+	}
+	else
+	{
+	item = temp;
+	}
+	
+	temp = (FileItem) i.next();
 }
 
 //get database info from the session (auth.html)
@@ -42,7 +71,8 @@ photo_id = rset1.getInt(1);
 
 String userName = session.getAttribute("userName").toString();
 
-stmt.execute("INSERT INTO images values("+photo_id+",'"+userName+"', null, null, null, null, null, null, empty_blob())");
+
+stmt.execute("INSERT INTO images values("+photo_id+",'"+userName+"', null, '"+subject+"', '"+location+"', to_date('"+date+"', 'yyyy-mm-dd'), '"+description+"', empty_blob(), empty_blob())");
 ResultSet rset = stmt.executeQuery("SELECT * from images where photo_id = "+photo_id+" for update");
 rset.next();
 BLOB myblob = ((OracleResultSet)rset).getBLOB(9);
