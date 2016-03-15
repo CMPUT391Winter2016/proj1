@@ -1,7 +1,7 @@
 <%@ page import="java.io.*, java.sql.*, java.util.*, oracle.sql.*, oracle.jdbc.*" %>
 <%
 String photo_id = request.getQueryString();
-String query = "select photo from images where photo_id = "+photo_id;
+String query = "select thumbnail from images where photo_id = "+photo_id;
 
 //get database info from the session (auth.html)
 
@@ -36,7 +36,6 @@ try {
 		int imageByte;
 		while((imageByte = input.read()) != -1) {
 		    response.getOutputStream().write(imageByte);
-		    
 		    
 		}
 		response.getOutputStream().flush();
