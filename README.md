@@ -6,14 +6,16 @@ Clone this repo into your webapps folder in catalina. Make sure to create a copy
 * login.jsp - Servlet that checks credential for validity, redirects based off validity.
 * sign_up.html - Page that prompts for user information.
 * signup.jsp
-* success.jsp - A user's home page, stub for now.
+* success.jsp - A user's home page, stub for now.  
+  
+Needed for Search:  
 
+  
 ##Resources
 Resources used: Yuan, Li: University of Alberta. Login page example:
-http://luscar.cs.ualberta.ca:8080/yuan/login/login.html
+http://luscar.cs.ualberta.ca:8080/yuan/login/login.html  
 
-StackOverFlow user Ankit Lamba (http://stackoverflow.com/users/2764279/ankit-lamba) Get the current page URL:
-http://stackoverflow.com/questions/23804236/how-to-get-url-from-address-bar-in-jsp
-
+W3schools: Dropdown menus and more:
+http://www.w3schools.com/html/html_form_elements.asp
 
 Image hosting website by Charles Rozsa, Nicole Lovas, and Zainab Alsharif For CMPUT391 winter 2016  
