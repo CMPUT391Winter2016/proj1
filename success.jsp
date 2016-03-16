@@ -15,7 +15,8 @@
 <tr bgcolor="#FFFFFF">
 
 <td height = "3%" cellpadding="30" cellspacing = "30">|| <a href="addphoto.html">Add Photo</a> | 
-<a href="PictureBrowse.html">Search Photos</a> | Groups ||</td>
+
+<a href="PictureBrowse.jsp">Search Photos</a> | Groups ||</td>
 
 </tr>
 

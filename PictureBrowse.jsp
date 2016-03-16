@@ -1,7 +1,7 @@
 <%@ page import="java.io.*, java.sql.*, java.util.*, oracle.sql.*, oracle.jdbc.*" %>
 <%
 String photo_id = request.getQueryString();
-String query = "select photo from images where photo_id = "+photo_id;
+String query = "select photo_id from images";
 
 //get database info from the session (auth.html)
 
@@ -29,22 +29,23 @@ conn = DriverManager.getConnection(DBstring,DBname,DBpw);
 try {
 	    Statement stmt = conn.createStatement();
 	    ResultSet rset = stmt.executeQuery(query);
-
-	    if ( rset.next() ) {
-		response.setContentType("image/gif");
-		InputStream input = rset.getBinaryStream(1);	    
-		int imageByte;
-		while((imageByte = input.read()) != -1) {
-		    response.getOutputStream().write(imageByte);
-		    
-		    
-		}
-		response.getOutputStream().flush();
-		response.getOutputStream().close();
-		input.close();
-	    } 
-	    else 
-		out.println("no picture available");
+   out.println("<body>");
+   out.println("<table border='1px'>");
+   int i = 0;
+            while(rset.next())
+            {
+   if (i%3==0)
+   {
+   out.println("<tr>");
+   }
+   out.println("<td><a href='GetPicture.jsp?"+(rset.getObject(1)).toString()+"'>");
+   out.println("<img src='GetThumbnail.jsp?"+(rset.getObject(1)).toString()+"'/></a>");
+   i++;
+            }
+   out.println("</table>");
+   out.println("<p><a href='success.jsp'>Home</a></p>");
+   out.println("</body>");
+	    
 	} catch( Exception ex ) {
 	    out.println(ex.getMessage() );
 	}
@@ -58,3 +59,30 @@ try {
 	}
 
 %>
+
+<body>
+<center><b>Search</b></center>
+
+
+<center><form method ="post" action="search.jsp" name="searchform">
+<input type = "text" value = "Search" name = "search"></input>
+<br>
+Order by 
+ <select name="orderBy">
+  <option value="relevance">Relevance</option>
+  <option value="recent">Recent</option>
+  <option value="oldest">Oldest</option>
+</select>
+
+<input type = "submit" value = "Search" name = "enter_search"></input>
+</form>
+
+</body>
+
+<html>
+<head>
+<title>Picture Browse</title>
+</head>
+
+
+</html>
