@@ -18,4 +18,8 @@ http://luscar.cs.ualberta.ca:8080/yuan/login/login.html
 W3schools: Dropdown menus and more:
 http://www.w3schools.com/html/html_form_elements.asp
 
+Using Contains on more than one column: Stackoverflow user JWK
+http://stackoverflow.com/questions/15474350/using-oracle-contains-clause-for-2-columns
+
+
 Image hosting website by Charles Rozsa, Nicole Lovas, and Zainab Alsharif For CMPUT391 winter 2016  
