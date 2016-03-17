@@ -1,5 +1,5 @@
 <%@ page import="org.apache.commons.fileupload.DiskFileUpload, org.apache.commons.fileupload.FileItem, java.io.*, java.sql.*, java.util.*, oracle.sql.*, oracle.jdbc.*, java.awt.Image, java.awt.image.BufferedImage, javax.imageio.ImageIO" %>
-<%! int photo_id;
+<%! int photo_id, group_id;
     String subject, location, description, date;
     //java.sql.Date date; %>
 <%
@@ -26,6 +26,9 @@ while (i.hasNext())
 	{
 	  date = temp.getString();
 	  out.println(date);
+	} else if(temp.getFieldName().equals("group"))
+	{
+	  group_id = Integer.parseInt(temp.getString());
 	}
 	}
 	else
@@ -92,7 +95,7 @@ photo_id = rset1.getInt(1);
 String userName = session.getAttribute("userName").toString();
 
 
-stmt.execute("INSERT INTO images values("+photo_id+",'"+userName+"', null, '"+subject+"', '"+location+"', to_date('"+date+"', 'yyyy-mm-dd'), '"+description+"', empty_blob(), empty_blob())");
+stmt.execute("INSERT INTO images values("+photo_id+",'"+userName+"', "+group_id+", '"+subject+"', '"+location+"', to_date('"+date+"', 'yyyy-mm-dd'), '"+description+"', empty_blob(), empty_blob())");
 ResultSet rset = stmt.executeQuery("SELECT * from images where photo_id = "+photo_id+" for update");
 rset.next();
 BLOB thumbnail = ((OracleResultSet)rset).getBLOB(8);
