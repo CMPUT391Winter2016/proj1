@@ -1,121 +1,86 @@
-<%@ page import="org.apache.commons.fileupload.DiskFileUpload, org.apache.commons.fileupload.FileItem, java.io.*, java.sql.*, java.util.*, oracle.sql.*, oracle.jdbc.*, java.awt.Image, java.awt.image.BufferedImage, javax.imageio.ImageIO" %>
-<%! int photo_id;
-    String subject, location, description, date;
-    //java.sql.Date date; %>
+<%@ page import="java.sql.*" %> 
+
 <%
-DiskFileUpload fu = new DiskFileUpload();
-List FileItems = fu.parseRequest(request);
-Iterator i = FileItems.iterator();
-FileItem temp = (FileItem) i.next();
-FileItem item = null;
-while (i.hasNext())
-{
-	if(temp.isFormField()){
-	if(temp.getFieldName().equals("subject"))
-	{
-	  subject = temp.getString();
-	}
-	else if (temp.getFieldName().equals("location"))
-	{
-	  location = temp.getString();
-	}
-	else if (temp.getFieldName().equals("description"))
-	{
-	  description = temp.getString();
-	} else if (temp.getFieldName().equals("date"))
-	{
-	  //SimpleDateFormat format = new SimpleDateFormat("mm-dd-yyyy");
-	  //java.util.Date tdate = format.parse(temp.getString());
-	  //date = new java.sql.Date(tdate.getTime());
-	  date = temp.getString();
-	  out.println(date);
-	}
-	}
-	else
-	{
-	item = temp;
-	}
-	
-	temp = (FileItem) i.next();
-}
-
-
-
-//get database info from the session (auth.html)
-
-String DBdriver = session.getAttribute("dbdriver").toString();
-String DBname = session.getAttribute("dbname").toString();
-String DBpw = session.getAttribute("dbpassword").toString();
-String DBstring = session.getAttribute("dbstring").toString();
+//establish the connection to the underlying database
 Connection conn = null;
-
+String driverName = session.getAttribute("dbdriver").toString();
+String dbstring = session.getAttribute("dbstring").toString();
+String dbname = session.getAttribute("dbname").toString();
+String dbpassword = session.getAttribute("dbpassword").toString();
 try{ 
 //load and register the driver 
-Class drvClass = Class.forName(DBdriver);
+Class drvClass = Class.forName(driverName);
 DriverManager.registerDriver((Driver) drvClass.newInstance());
- } catch(Exception ex){ out.println("" + ex.getMessage() + "");
+ } catch(Exception ex){ out.println("" + ex.getMessage() + "broke");
 	 }
-
  try{ 
 //establish the connection 
-conn = DriverManager.getConnection(DBstring,DBname,DBpw);
+conn = DriverManager.getConnection(dbstring,dbname, dbpassword);
 conn.setAutoCommit(false);
- } catch(Exception ex){ out.println("" + ex.getMessage() + "");
+ } catch(Exception ex){ out.println(dbstring + ex.getMessage() + dbname);
+	 }
+//select the user table from the underlying db and validate the user name and password
+Statement stmt = null;
+ResultSet rset = null;
+String username = session.getAttribute("userName").toString();
+String sql = "select group_id,group_name from groups where user_name = '"+username+"'";
+
+try{ 
+stmt = conn.createStatement();
+rset = stmt.executeQuery(sql);
+
+} catch(Exception ex){ out.println("broke" + ex.getMessage() + "");
 	 }
 
-Statement stmt = conn.createStatement();
+%> 
 
-FileItem item2 = item;
-
-InputStream instream = item.getInputStream();
-InputStream instream2 = item2.getInputStream();
-
-BufferedImage img = ImageIO.read(instream2);
-int w = img.getWidth()/10;
-int h = img.getHeight()/10;
-BufferedImage shrunkImg = new BufferedImage(w, h, img.getType());
-for (int y=0; y < h; ++y)
-    for (int x=0; x < w; ++x)
-    	shrunkImg.setRGB(x, y, img.getRGB(x*10, y*10));
-
-
-out.println("<p>"+item.getSize()+"</p>");
-ResultSet rset1 = stmt.executeQuery("SELECT pic_id_sequence.nextval from dual");
-rset1.next();
-photo_id = rset1.getInt(1);
-
-String userName = session.getAttribute("userName").toString();
-
-
-stmt.execute("INSERT INTO images values("+photo_id+",'"+userName+"', null, '"+subject+"', '"+location+"', to_date('"+date+"', 'yyyy-mm-dd'), '"+description+"', empty_blob(), empty_blob())");
-ResultSet rset = stmt.executeQuery("SELECT * from images where photo_id = "+photo_id+" for update");
-rset.next();
-BLOB thumbnail = ((OracleResultSet)rset).getBLOB(8);
-BLOB image = ((OracleResultSet)rset).getBLOB(9);
-
-OutputStream outstream = image.getBinaryOutputStream();
-OutputStream outstream2 = thumbnail.getBinaryOutputStream();
-ImageIO.write(shrunkImg, "jpg", outstream2);
-
-int size = image.getBufferSize();
-byte[] buffer = new byte[size];
-int length = -1;
-while( (length = instream.read(buffer)) !=-1)
-{ 
-outstream.write(buffer, 0, length);
-out.println("<p>"+size+"</p>");
-}
-instream.close();
-instream2.close();
-outstream.close();
-outstream2.close();
-stmt.executeUpdate("commit");
-conn.close();
-%>
 <html>
 <head>
-<title>Photo Upload</title>
+<title>Add Photo</title>
 </head>
 
 <body>
-<a href="success.jsp">Home</a>
+
+<form name="upload" method="post" action="upload.jsp" enctype="multipart/form-data">
+<table>
+<tr>
+<td>Chose file name</td>
+<td><input name="file-path" type="file" required multiple></td>
+</tr>
+<tr>
+<td>Subject:</td>
+<td><input name="subject" placeholder="Subject" type="text" required></td>
+</tr>
+<tr>
+<td>Date:</td>
+<td><input name = "date" type = "date" required></td>
+</tr>
+<tr>
+<td>Visibility:</td>
+<td>
+<select name = "group">
+  <option value="2">Private</option>
+  <option value="1">Public</option>
+  <%
+     while(rset.next()){
+     out.println("<option value='"+rset.getInt("group_id")+"'>"+rset.getString("group_name")+"</option>");
+     }
+     %>
+</select>
+</td>
+<tr>
+<td>Location:</td>
+<td><input name = "location" placeholder = "Location" type =
+	   "text"></td>
+<tr>
+<td>Description:</td>
+<td><textarea name = "description" rows = "10" cols ="30"></textarea></td>
+<tr>
+<td> <input name="submit" type="submit"></td>
+</table>
+</form>
+
+</body>
+</html>
+
+<% conn.close(); %>
