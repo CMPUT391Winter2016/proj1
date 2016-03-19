@@ -68,7 +68,7 @@ try {
 <input type = "text" value = "Search" name = "search"></input>
 <br>
 Order by 
- <select name="orderBy">
+ <select id = "orderby" name="orderby">
   <option value="relevance">Relevance</option>
   <option value="recent">Recent</option>
   <option value="oldest">Oldest</option>
