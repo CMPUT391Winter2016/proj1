@@ -1,5 +1,6 @@
 <%@ page import="java.sql.*" %> 
-<%! String subject, place, description, date; %>
+<%! String subject, place, description, date;
+    int permitted; %>
 <%
    String photo_id = request.getQueryString();
 
@@ -25,7 +26,7 @@ conn.setAutoCommit(false);
 Statement stmt = null;
 ResultSet rset = null;
 
-String sql = "select subject, timing, place, description FROM images WHERE photo_id = "+photo_id;
+String sql = "select subject, permitted, timing, place, description FROM images WHERE photo_id = "+photo_id;
 
 try{ 
 stmt = conn.createStatement();
@@ -35,6 +36,7 @@ subject= rset.getString("subject");
 place = rset.getString("place");
 date = rset.getString("timing").substring(0,10);
 description = rset.getString("description");
+permitted = rset.getInt("permitted");
 } catch(Exception ex){ out.println("broke" + ex.getMessage() + "");
 	 }
 
@@ -61,12 +63,33 @@ description = rset.getString("description");
 <td>Visibility:</td>
 <td>
 <select name = "group">
-  <option value="2">Private</option>
-  <option value="1">Public</option>
-  <%
-     //while(rset.next()){
-     //out.println("<option value='"+rset.getInt("group_id")+"'>"+rset.getString("group_name")+"</option>");
-    // }
+<% if(permitted == 2){
+  out.println("<option value='2' selected>Private</option>");
+  } else{
+  out.println("<option value='2'>Private</option>");
+  }
+  if(permitted == 1){
+  out.println("<option value='1' selected>Public</option>");
+} else {
+  out.println("<option value='1'>Public</option>");
+}
+
+     String username = session.getAttribute("userName").toString();
+String sql2 = "select group_id,group_name from groups where user_name = '"+username+"'";
+     try{ 
+stmt = conn.createStatement();
+rset = stmt.executeQuery(sql2);
+while(rset.next()){
+     if(rset.getInt("group_id") == permitted)
+     {
+     out.println("<option value='"+rset.getInt("group_id")+"' selected>"+rset.getString("group_name")+"</option>");
+} else {
+   out.println("<option value='"+rset.getInt("group_id")+"'>"+rset.getString("group_name")+"</option>");
+}
+}
+} catch(Exception ex){ out.println("broke" + ex.getMessage() + "");
+	 }
+     
      %>
 </select>
 </td>

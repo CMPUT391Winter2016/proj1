@@ -27,7 +27,8 @@ String subject = request.getParameter("subject");
 String location = request.getParameter("location");
 String description = request.getParameter("description");
 String date = request.getParameter("date");
-String sql = "UPDATE images SET subject = '"+subject+"', place = '"+location+"', description = '"+description+"', timing = to_date('"+date+"', 'yyyy-mm-dd') WHERE photo_id = "+photo_id;
+int permitted = Integer.parseInt(request.getParameter("group"));
+String sql = "UPDATE images SET subject = '"+subject+"', place = '"+location+"', description = '"+description+"', timing = to_date('"+date+"', 'yyyy-mm-dd'), permitted = "+permitted+" WHERE photo_id = "+photo_id;
 
 try{ 
 stmt = conn.createStatement();
