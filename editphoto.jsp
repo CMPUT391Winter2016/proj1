@@ -105,6 +105,10 @@ while(rset.next()){
 </table>
 </form>
 
+<form method="post" action="deletephoto.jsp?<%=photo_id%>">
+<input type="submit" value="Delete">
+</form>
+
 </body>
 </html>
 
