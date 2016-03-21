@@ -1,8 +1,8 @@
 <%@ page import="java.io.*, java.sql.*, java.util.*, oracle.sql.*, oracle.jdbc.*" %>
-<%! String owner; %>
+<%! String owner, subject, place, description; %>
 <%
 String photo_id = request.getQueryString();
-String query = "SELECT first_name FROM persons WHERE user_name = '"+session.getAttribute("userName")+"'";
+String query = "SELECT owner_name, subject, timing, place, description FROM images WHERE photo_id = "+photo_id;
 
 String DBdriver = session.getAttribute("dbdriver").toString();
 String DBname = session.getAttribute("dbname").toString();
@@ -27,7 +27,10 @@ try {
 	    Statement stmt = conn.createStatement();
 	    ResultSet rset = stmt.executeQuery(query);
 	    rset.next();
-	    owner = rset.getString("first_name");
+	    owner = rset.getString("owner_name");
+	    subject = rset.getString("subject");
+	    place = rset.getString("place");
+	    description = rset.getString("description");
 } catch( Exception ex ) {
 	    out.println(ex.getMessage() );
 	}
@@ -39,44 +42,36 @@ try {
 		out.println( ex.getMessage() );
 	    }
 	}
+
 %>
 
-<!-- //Small landing page if you are a valid user. -->
 <html>
 <head>
-<title> <%=owner%>'s Site
-</title>
+<title>Viewing Photo <%=photo_id%></title>
 </head>
+
+
 <body>
 
-<table border="1" width = "1650" height = "1000" cellpadding = "15" cellspacing = "10" bgcolor="#bedbeb">
-
-<tr bgcolor="#FFFFFF">
-<td height = "20%">put header here</td>
-</tr>
-
-<tr bgcolor="#FFFFFF">
-
-<td height = "3%" cellpadding="30" cellspacing = "30">|| <a href="addphoto.jsp">Add Photo</a> | 
-
-<a href="PictureBrowse.jsp">Search Photos</a> | Groups ||</td>
-
-</tr>
-
-<tr bgcolor="#FFFFFF">
-<td>
-
-<h1>Hello <%=owner%></h1>
-<p>What do you want to do now?<p>
-
-
-
-<br>
-
-</td>
-</tr>
-
+<img src="GetPicture.jsp?<%=photo_id%>"/>
+<table>
+<tr>
+<td>Owner:</td>
+<td><%=owner%></td>
+<tr>
+<td>Subject:</td>
+<td><%=subject%></td>
+<tr>
+<td>Place:</td>
+<td><%=place%></td>
+<tr>
+<td>Description:</td>
+<td><%=description%></td>
 </table>
 
+<table>
+<tr>
+<td><a href="PictureBrowse.jsp">Back</a>
 </body>
+
 </html>

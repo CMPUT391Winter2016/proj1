@@ -51,7 +51,7 @@ while(rset.next()) {
    {
    out.println("<tr>");
    }
-   out.println("<td><a href='GetPicture.jsp?"+(rset.getObject(1)).toString()+"'>");
+   out.println("<td><a href='viewpicture.jsp?"+(rset.getObject(1)).toString()+"'>");
    out.println("<img src='GetThumbnail.jsp?"+(rset.getObject(1)).toString()+"'/></a>");
    i++;
             }
@@ -75,7 +75,7 @@ while(rset.next()) {
    {
    out.println("<tr>");
    }
-   out.println("<td><a href='GetPicture.jsp?"+(rset.getObject(1)).toString()+"'>");
+   out.println("<td><a href='viewpicture.jsp?"+(rset.getObject(1)).toString()+"'>");
    out.println("<img src='GetThumbnail.jsp?"+(rset.getObject(1)).toString()+"'/></a>");
    i++;
             }
@@ -105,7 +105,7 @@ while(rset.next()) {
    {
    out.println("<tr>");
    }
-   out.println("<td><a href='GetPicture.jsp?"+(rset.getObject(1)).toString()+"'>");
+   out.println("<td><a href='viewpicture.jsp?"+(rset.getObject(1)).toString()+"'>");
    out.println("<img src='GetThumbnail.jsp?"+(rset.getObject(1)).toString()+"'/></a>");
    i++;
             }

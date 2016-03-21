@@ -1,7 +1,7 @@
 <%@ page import="java.io.*, java.sql.*, java.util.*, oracle.sql.*, oracle.jdbc.*" %>
 <%
 String photo_id = request.getQueryString();
-String query = "select photo_id from images";
+String query = "SELECT unique i.photo_id from images i, groups g, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = g.group_id AND g.group_id = i.permitted) OR i.permitted = 1 OR i.owner_name = '"+session.getAttribute("userName")+"'";
 
 //get database info from the session (auth.html)
 
@@ -38,7 +38,7 @@ try {
    {
    out.println("<tr>");
    }
-   out.println("<td><a href='GetPicture.jsp?"+(rset.getObject(1)).toString()+"'>");
+   out.println("<td><a href='viewpicture.jsp?"+(rset.getObject(1)).toString()+"'>");
    out.println("<img src='GetThumbnail.jsp?"+(rset.getObject(1)).toString()+"'/></a>");
    i++;
             }
@@ -65,7 +65,7 @@ try {
 
 
 <center><form method ="post" action="search.jsp" name="searchform">
-<input type = "text" value = "Search" name = "search"></input>
+<input type = "text" placeholder = "Search" name = "search"></input>
 <br>
 Order by 
  <select id = "orderby" name="orderby">
