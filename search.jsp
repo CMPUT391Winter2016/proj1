@@ -35,8 +35,14 @@ out.println("your choice was... " + dropdown[0]);
 
 out.println("Your first date was... " +request.getParameter("from"));
 
+String date1 = request.getParameter("from");
+String date2 = request.getParameter("to");
+
+
+
+
 //user chooses to search by relevance
- if( (!request.getParameter("search").equals("")) && dropdown[0].equals("relevance") ) {
+ if( (!request.getParameter("search").equals("")) && dropdown[0].equals("relevance") && date1.equals("") && date2.equals("") ) {
  PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 order by 6*score(2) + 3*score(3) + score(1) desc");
 
 

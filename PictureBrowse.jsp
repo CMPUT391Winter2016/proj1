@@ -103,15 +103,14 @@ $(function(){
     });
 </script>
 
-
+<br>
+<center>
+(optional)
 From: 
 <input type="text" id="from" name = "from" />
 To: 
 <input type="text" id="to" name = "to" />
-
-
-
-
+<br>
 
 <input type = "submit" value = "Search" name = "enter_search"></input>
 <p>
