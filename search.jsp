@@ -18,7 +18,7 @@ Class drvClass = Class.forName(m_driverName);
 DriverManager.registerDriver((Driver) drvClass.newInstance());
 m_con = DriverManager.getConnection(m_url, m_userName, m_password);
 } catch(Exception e) {
-out.print("!!Error displaying data: ");
+out.print("Error displaying data: ");
 out.println(e.getMessage());
 return; 
 }
@@ -33,13 +33,15 @@ out.println("");
 String[] dropdown = request.getParameterValues("orderby");
 out.println("your choice was... " + dropdown[0]);
 
+out.println("Your first date was... " +request.getParameter("from"));
+
 //user chooses to search by relevance
  if( (!request.getParameter("search").equals("")) && dropdown[0].equals("relevance") ) {
  PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 order by 6*score(2) + 3*score(3) + score(1) desc");
 
 
 rset = doSearch.executeQuery();
-
+out.println("<center>");
 
 	out.println("<body>");
   	out.println("<table border='1px'>");
