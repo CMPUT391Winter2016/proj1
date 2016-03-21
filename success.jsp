@@ -1,6 +1,10 @@
 <%@ page import="java.io.*, java.sql.*, java.util.*, oracle.sql.*, oracle.jdbc.*" %>
 <%! String owner; %>
 <%
+if(session.getAttribute("userName") == null){
+   response.setStatus(response.SC_MOVED_TEMPORARILY);
+   response.setHeader("Location", "home.html");
+} else{
 String photo_id = request.getQueryString();
 String query = "SELECT first_name FROM persons WHERE user_name = '"+session.getAttribute("userName")+"'";
 
@@ -39,6 +43,7 @@ try {
 		out.println( ex.getMessage() );
 	    }
 	}
+}
 %>
 
 <!-- //Small landing page if you are a valid user. -->
@@ -59,7 +64,7 @@ try {
 
 <td height = "3%" cellpadding="30" cellspacing = "30">|| <a href="addphoto.jsp">Add Photo</a> | 
 
-<a href="PictureBrowse.jsp">Search Photos</a> | Groups ||</td>
+<a href="PictureBrowse.jsp">Search Photos</a> | Groups | <a href="logout.jsp">Logout</a> ||</td>
 
 </tr>
 
