@@ -74,8 +74,9 @@ conn.close();
 
 <br>
 <br>
-<font size = "2"><i>Create a new Group? <a href = "add_group.html">add group.</i></font></a>
-
+<font size = "2"><i> <a href = "add_group.html">add group.</i></font></a>
+<br>
+<font size = "2"><i> <a href = "success.jsp">Home page.</i></font></a>
 <br>
 <br>
 

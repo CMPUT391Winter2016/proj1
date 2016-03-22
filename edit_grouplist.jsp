@@ -84,10 +84,10 @@ if(!rset.next()){
           stmt3 = conn.createStatement();        
           stmt3.executeUpdate(addstring);
 
-          response.setStatus(response.SC_MOVED_TEMPORARILY);
-          response.setHeader("Location", "groups.jsp");
+          //response.setStatus(response.SC_MOVED_TEMPORARILY);
+          //response.setHeader("Location", "groups.jsp");
 
-
+        out.println("user "+ groupUser +" is successfully added to " +groupName + " group");
     }
 
 }
@@ -158,9 +158,9 @@ String user_check2 = "select friend_id from group_lists where friend_id='"+group
           stmt3 = conn.createStatement();        
           stmt3.executeUpdate(addstring);
 
-          response.setStatus(response.SC_MOVED_TEMPORARILY);
-          response.setHeader("Location", "groups.jsp");
-
+          //response.setStatus(response.SC_MOVED_TEMPORARILY);
+          //response.setHeader("Location", "groups.jsp");
+          out.println("user "+ groupUser +" is successfully deleted from " +groupName + " group");
 
     }
 
@@ -171,6 +171,11 @@ String user_check2 = "select friend_id from group_lists where friend_id='"+group
 }
 
 %>
-
+<br>
+<br>
+<br>
+<font size = "2"><i> <a href = "groups.jsp">Group Page</i></font></a>
+<br>
+<font size = "2"><i> <a href = "success.jsp">Home page.</i></font></a>
 </body>
 </html>
