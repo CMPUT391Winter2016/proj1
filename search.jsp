@@ -7,8 +7,6 @@ String m_userName = session.getAttribute("dbname").toString();
 String m_password = session.getAttribute("dbpassword").toString();
 String m_url = session.getAttribute("dbstring").toString();
 
-String viewable = "(SELECT i.photo_id as photo_id, i.permitted as permitted, i.subject as subject, i.place as place, i.timing as timing, i.description as description FROM images i, groups g, group_lists l WHERE l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = g.group_id AND g.group_id = i.permitted) UNION (SELECT photo_id, permitted, subject, place, timing, description FROM images WHERE permitted = 1 OR owner_name = '"+session.getAttribute("userName")+"')"; 
-
 String addItemError = "";
 Connection m_con;
 String createString;
@@ -56,7 +54,15 @@ String date2 = request.getParameter("to");
 
 //user chooses to search by relevance, first date only
 if( (!request.getParameter("search").equals("")) && dropdown[0].equals("relevance") && date2.equals("") ) {
- PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE (permitted = 1 AND timing >= to_date('"+date1+"', 'yyyy-mm-dd') )AND ( contains(description,'" +request.getParameter("search")+ "', 1) > 0  OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ) order by 6*score(2) + 3*score(3) + score(1) desc");
+
+String test = "(SELECT i.photo_id, score(1) as score1, score(2) as score2, score(3) as score3 FROM images i, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = i.permitted AND i.timing >= to_date('"+date1+"', 'yyyy-mm-dd'))  AND ( contains(i.description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(i.subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(i.place,'" +request.getParameter("search")+ "', 3) > 0 ))";
+
+String test2 = "(SELECT photo_id, score(1) as score1, score(2) as score2, score(3) as score3 FROM images WHERE (owner_name = '"+session.getAttribute("userName")+"' OR permitted = 1) AND timing >= to_date('"+date1+"', 'yyyy-mm-dd') AND ( contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ))";
+
+ PreparedStatement doSearch = m_con.prepareStatement("SELECT * FROM (" +test + " UNION " + test2 + ") order by 6*score2 + 3*score3 + score1 desc");
+
+
+ //PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE (permitted = 1 AND timing >= to_date('"+date1+"', 'yyyy-mm-dd') )AND ( contains(description,'" +request.getParameter("search")+ "', 1) > 0  OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ) order by 6*score(2) + 3*score(3) + score(1) desc");
 
 
 rset = doSearch.executeQuery();
@@ -107,7 +113,7 @@ String test = "(SELECT i.photo_id, score(1) as score1, score(2) as score2, score
 String test2 = "(SELECT photo_id, score(1) as score1, score(2) as score2, score(3) as score3 FROM images WHERE owner_name = '"+session.getAttribute("userName")+"' OR permitted = 1 AND ( contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ))";
 
  PreparedStatement doSearch = m_con.prepareStatement("SELECT * FROM (" +test + " UNION " + test2 + ") order by 6*score2 + 3*score3 + score1 desc");
-//order by 6*score(2) + 3*score(3) + score(1) desc
+
 
 
 rset = doSearch.executeQuery();
@@ -132,7 +138,14 @@ while(rset.next()) {
 
  } //user searches by most recent, no dates
 else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("recent") && date1.equals("") && date2.equals("")) {
- PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE permitted = 1 AND ( contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ) order by timing desc");
+
+String test = "(SELECT i.photo_id as photo_id, i.timing as timing FROM images i, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = i.permitted)  AND ( contains(i.description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(i.subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(i.place,'" +request.getParameter("search")+ "', 3) > 0 ))";
+
+String test2 = "(SELECT photo_id, timing FROM images WHERE owner_name = '"+session.getAttribute("userName")+"' OR permitted = 1 AND ( contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ))";
+
+ PreparedStatement doSearch = m_con.prepareStatement("SELECT * FROM (" +test + " UNION " + test2 + ") order by timing desc");
+
+// PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE permitted = 1 AND ( contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ) order by timing desc");
 
 rset = doSearch.executeQuery();
 
@@ -162,7 +175,14 @@ while(rset.next()) {
 
 //user searches by oldest, no dates
 else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("oldest") && date1.equals("") && date2.equals("")) {
- PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE permitted = 1 AND   ( contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ) order by timing asc");
+
+String test = "(SELECT i.photo_id as photo_id, i.timing as timing FROM images i, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = i.permitted)  AND ( contains(i.description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(i.subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(i.place,'" +request.getParameter("search")+ "', 3) > 0 ))";
+
+String test2 = "(SELECT photo_id, timing FROM images WHERE owner_name = '"+session.getAttribute("userName")+"' OR permitted = 1 AND ( contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ))";
+
+ PreparedStatement doSearch = m_con.prepareStatement("SELECT * FROM (" +test + " UNION " + test2 + ") order by timing asc");
+
+// PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE permitted = 1 AND   ( contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ) order by timing asc");
 
 rset = doSearch.executeQuery();
 
