@@ -7,6 +7,8 @@ String m_userName = session.getAttribute("dbname").toString();
 String m_password = session.getAttribute("dbpassword").toString();
 String m_url = session.getAttribute("dbstring").toString();
 
+String viewable = "(SELECT i.photo_id as photo_id, i.permitted as permitted, i.subject as subject, i.place as place, i.timing as timing, i.description as description FROM images i, groups g, group_lists l WHERE l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = g.group_id AND g.group_id = i.permitted) UNION (SELECT photo_id, permitted, subject, place, timing, description FROM images WHERE permitted = 1 OR owner_name = '"+session.getAttribute("userName")+"')"; 
+
 String addItemError = "";
 Connection m_con;
 String createString;
@@ -99,7 +101,13 @@ while(rset.next()) {
 
 //user chooses to search by relevance, no dates
  if( (!request.getParameter("search").equals("")) && dropdown[0].equals("relevance") && date1.equals("") && date2.equals("") ) {
- PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE permitted = 1 AND ( contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ) order by 6*score(2) + 3*score(3) + score(1) desc");
+
+String test = "(SELECT i.photo_id, score(1) as score1, score(2) as score2, score(3) as score3 FROM images i, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = i.permitted)  AND ( contains(i.description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(i.subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(i.place,'" +request.getParameter("search")+ "', 3) > 0 ))";
+
+String test2 = "(SELECT photo_id, score(1) as score1, score(2) as score2, score(3) as score3 FROM images WHERE owner_name = '"+session.getAttribute("userName")+"' OR permitted = 1 AND ( contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ))";
+
+ PreparedStatement doSearch = m_con.prepareStatement("SELECT * FROM (" +test + " UNION " + test2 + ") order by 6*score2 + 3*score3 + score1 desc");
+//order by 6*score(2) + 3*score(3) + score(1) desc
 
 
 rset = doSearch.executeQuery();
