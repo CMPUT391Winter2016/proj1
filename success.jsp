@@ -64,7 +64,7 @@ try {
 
 <td height = "3%" cellpadding="30" cellspacing = "30">|| <a href="addphoto.jsp">Add Photo</a> | 
 
-<a href="PictureBrowse.jsp">Search Photos</a> | Groups | <a href="logout.jsp">Logout</a> ||</td>
+<a href="PictureBrowse.jsp">Search Photos</a> | <a href="groups.jsp">Groups</a> | <a href="logout.jsp">Logout</a> ||</td>
 
 </tr>
 
