@@ -74,6 +74,15 @@ Order by
   <option value="oldest">Oldest</option>
 </select>
 
+<%
+/*
+Code for creating a calender in javascript for date selection, if browser doesn't support HTML5: JavascriptKit:
+http://www.javascriptkit.com/javatutors/createelementcheck2.shtml
+
+Changing a javascript date picker into yyyy-mm-dd format: StackOverFlow user Pete Naylor:
+http://stackoverflow.com/questions/16025441/jquery-datepicker-change-date-format-to-yyyy-mm-dd-php
+*/
+%>
 
 <script type="text/javascript">
     var datefield=document.createElement("input")
@@ -97,7 +106,7 @@ $(function(){
         $("#from").datepicker({ dateFormat: 'yy-mm-dd' }).bind("change",function(){
             var minValue = $(this).val();
             minValue = $.datepicker.parseDate("yy-mm-dd", minValue);
-            minValue.setDate(minValue.getDate()+1);
+            minValue.setDate(minValue.getDate());
             $("#to").datepicker( "option", "minDate", minValue );
         })
     });
@@ -107,9 +116,9 @@ $(function(){
 <center>
 (optional)
 From: 
-<input type="text" id="from" name = "from" />
+<input type="date" id="from" name = "from" />
 To: 
-<input type="text" id="to" name = "to" />
+<input type="date" id="to" name = "to" />
 <br>
 
 <input type = "submit" value = "Search" name = "enter_search"></input>
