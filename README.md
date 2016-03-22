@@ -21,5 +21,11 @@ http://www.w3schools.com/html/html_form_elements.asp
 Using Contains on more than one column: Stackoverflow user JWK
 http://stackoverflow.com/questions/15474350/using-oracle-contains-clause-for-2-columns
 
+Code for creating a calender in javascript for date selection, if browser doesn't support HTML5: JavascriptKit:
+http://www.javascriptkit.com/javatutors/createelementcheck2.shtml
+
+Changing a javascript date picker into yyyy-mm-dd format: StackOverFlow user Pete Naylor:
+http://stackoverflow.com/questions/16025441/jquery-datepicker-change-date-format-to-yyyy-mm-dd-php
+
 
 Image hosting website by Charles Rozsa, Nicole Lovas, and Zainab Alsharif For CMPUT391 winter 2016  
