@@ -39,6 +39,7 @@ String date1 = request.getParameter("from");
 String date2 = request.getParameter("to");
 
 
+
 //user chooses to search with no keyword, first date only, by relevance - not allowed as this doesnt make sense
 //user chooses to search with no keyword, second date only, by relevance - not allowed as this doesnt make sense
 //user chooses to search with no keyword, both dates, by relevance - not allowed as this doesnt make sense
@@ -52,6 +53,34 @@ String date2 = request.getParameter("to");
 //user chooses to search with no keyword, both dates, by newest
 
 //user chooses to search by relevance, first date only
+if( (!request.getParameter("search").equals("")) && dropdown[0].equals("relevance") && date2.equals("") ) {
+ PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE (permitted = 1 AND timing >= to_date('"+date1+"', 'yyyy-mm-dd') )AND ( contains(description,'" +request.getParameter("search")+ "', 1) > 0  OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ) order by 6*score(2) + 3*score(3) + score(1) desc");
+
+
+rset = doSearch.executeQuery();
+out.println("<center>");
+
+	out.println("<body>");
+  	out.println("<table border='1px'>");
+	int i = 0;
+
+while(rset.next()) {
+
+ if (i%3==0)
+   {
+   out.println("<tr>");
+   }
+   out.println("<td><a href='viewpicture.jsp?"+(rset.getObject(1)).toString()+"'>");
+   out.println("<img src='GetThumbnail.jsp?"+(rset.getObject(1)).toString()+"'/></a>");
+   i++;
+            }
+   out.println("</table>");
+   out.println("</body>");
+
+ }
+
+
+
 //user chooses to search by relevance, second date only
 //user chooses to search by relevance, both dates
 
@@ -70,7 +99,7 @@ String date2 = request.getParameter("to");
 
 //user chooses to search by relevance, no dates
  if( (!request.getParameter("search").equals("")) && dropdown[0].equals("relevance") && date1.equals("") && date2.equals("") ) {
- PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE permitted = 1 AND contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 order by 6*score(2) + 3*score(3) + score(1) desc");
+ PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE permitted = 1 AND ( contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ) order by 6*score(2) + 3*score(3) + score(1) desc");
 
 
 rset = doSearch.executeQuery();
@@ -95,7 +124,7 @@ while(rset.next()) {
 
  } //user searches by most recent, no dates
 else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("recent") && date1.equals("") && date2.equals("")) {
- PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE permitted = 1 AND contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 order by timing desc");
+ PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE permitted = 1 AND ( contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ) order by timing desc");
 
 rset = doSearch.executeQuery();
 
@@ -125,7 +154,7 @@ while(rset.next()) {
 
 //user searches by oldest, no dates
 else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("oldest") && date1.equals("") && date2.equals("")) {
- PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE permitted = 1 AND  contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 order by timing asc");
+ PreparedStatement doSearch = m_con.prepareStatement("SELECT photo_id FROM images WHERE permitted = 1 AND   ( contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ) order by timing asc");
 
 rset = doSearch.executeQuery();
 

@@ -118,9 +118,9 @@ $(function(){
 <center>
 (optional)
 From: 
-<input type="date" id="from" name = "from" />
+<input type="date" id="from" name = "from" placeholder = "The Dawn of Time" />
 To: 
-<input type="date" id="to" name = "to" />
+<input type="date" id="to" name = "to" placeholder = "Now" />
 <br>
 
 <input type = "submit" value = "Search" name = "enter_search"></input>
