@@ -18,7 +18,7 @@
 <font size = "4"><i> group:</i></font>
 <br>
 
-<% if(request.getParameter("editgroup") != null) { 
+<% if(request.getParameter("editgroup") != null)  { 
 Connection conn = null;
 
 
@@ -97,6 +97,11 @@ write user name to add/delete:
 <br>
 <input type = "submit" value = "add user"  name = "adduser"></input>
 <input type = "submit" value = "delete user"  name = "deluser"></input>
+<br>
+<br>
+<font size = "2"><i> <a href = "groups.jsp">Group Page</i></font></a>
+<br>
+<font size = "2"><i> <a href = "success.jsp">Home page.</i></font></a>
 
  <% } 
 

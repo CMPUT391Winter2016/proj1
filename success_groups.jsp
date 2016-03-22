@@ -15,12 +15,6 @@
 <br>
 <br>
 <br>
-<font size = "2"><i>add users to the group?.</i></font></a>
-<br>
-write user name to add:
-<br>
-<input type="text" value = "" name="Username"></input>
-<input type = "submit" value = "add user"  name = "adduser"></input>
 <br>
 <font size = "2"><i> <a href = "add_group.html">Create another Group?</i></font></a>
 <br>
