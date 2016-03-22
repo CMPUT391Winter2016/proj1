@@ -76,7 +76,11 @@ try {
 <table>
 <tr>
 <td><a href="PictureBrowse.jsp">Back</a>
-<td><a href="editphoto.jsp?<%=photo_id%>">Edit</a>
+<%
+   if(owner.equals(session.getAttribute("userName"))){
+out.println("<td><a href='editphoto.jsp?"+photo_id+"'>Edit</a>");
+}
+%>
 </table>
 </body>
 

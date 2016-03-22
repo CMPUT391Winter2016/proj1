@@ -1,7 +1,9 @@
 <%@ page import="java.io.*, java.sql.*, java.util.*, oracle.sql.*, oracle.jdbc.*" %>
 <%
 String photo_id = request.getQueryString();
-String query = "SELECT unique i.photo_id from images i, groups g, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = g.group_id AND g.group_id = i.permitted) OR i.permitted = 1 OR i.owner_name = '"+session.getAttribute("userName")+"'";
+//String query = "SELECT unique i.photo_id from images i, groups g, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = g.group_id AND g.group_id = i.permitted) OR i.permitted = 1 OR i.owner_name = '"+session.getAttribute("userName")+"'";
+
+String query = "SELECT i.photo_id from images i where i.permitted = 1 OR i.owner_name = '"+session.getAttribute("userName")+"'";
 
 //get database info from the session (auth.html)
 
