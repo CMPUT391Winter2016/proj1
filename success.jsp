@@ -32,18 +32,7 @@ try {
 	    ResultSet rset = stmt.executeQuery(query);
 	    rset.next();
 	    owner = rset.getString("first_name");
-} catch( Exception ex ) {
-	    out.println(ex.getMessage() );
-	}
-	// to close the connection
-	finally {
-	    try {
-		conn.close();
-	    } catch ( SQLException ex) {
-		out.println( ex.getMessage() );
-	    }
-	}
-}
+
 %>
 
 <!-- //Small landing page if you are a valid user. -->
@@ -72,8 +61,32 @@ try {
 <td>
 
 <h1>Hello <%=owner%></h1>
-<p>What do you want to do now?<p>
+<h2>Top Five Most Viewed</h2>
+<%
 
+	   
+	    ResultSet rst = stmt.executeQuery("SELECT * FROM (SELECT photo_id, DENSE_RANK() OVER(order by views desc) as rank FROM popularity) where rank < 6");
+	    int count = 0;
+	    out.println("<table border='1px'>");
+	    while(rst.next()){
+		if ( count % 5 == 0) out.println("<tr>");
+		out.println("<td><a href='viewpicture.jsp?"+rst.getInt("photo_id")+"'><img src='GetThumbnail.jsp?"+rst.getInt("photo_id")+"'/></a></td>");
+		count++;
+	    }
+	    
+} catch( Exception ex ) {
+	    out.println(ex.getMessage() );
+	}
+	// to close the connection
+	finally {
+	    try {
+		conn.close();
+	    } catch ( SQLException ex) {
+		out.println( ex.getMessage() );
+	    }
+	}
+}
+%>
 
 
 <br>

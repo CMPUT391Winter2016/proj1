@@ -35,7 +35,11 @@ rset.next();
 subject= rset.getString("subject");
 place = rset.getString("place");
 date = rset.getString("timing").substring(0,10);
-description = rset.getString("description");
+if (rset.getString("description") == null) {
+   description = "";
+} else {
+  description = rset.getString("description");
+}
 permitted = rset.getInt("permitted");
 } catch(Exception ex){ out.println("broke" + ex.getMessage() + "");
 	 }

@@ -118,6 +118,7 @@ instream2.close();
 outstream.close();
 outstream2.close();
 stmt.executeUpdate("commit");
+stmt.execute("INSERT INTO popularity values("+photo_id+", 0)");
 
 }
 conn.close();

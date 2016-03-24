@@ -1,5 +1,6 @@
 <%@ page import="java.io.*, java.sql.*, java.util.*, oracle.sql.*, oracle.jdbc.*, java.sql.Date" %>
-<%! String owner, subject, place, description, date; %>
+<%! String owner, subject, place, description, date;
+    int views; %>
 <%
 String photo_id = request.getQueryString();
 String query = "SELECT owner_name, subject, timing, place, description FROM images WHERE photo_id = "+photo_id;
@@ -30,8 +31,17 @@ try {
 	    owner = rset.getString("owner_name");
 	    subject = rset.getString("subject");
 	    place = rset.getString("place");
-	    description = rset.getString("description");
+	    if (rset.getString("description") == null){
+	       description = "No description";
+	       } else {
+	       	 description = rset.getString("description");
+		 }
 	    date = rset.getString("timing");
+	    stmt.executeUpdate("UPDATE popularity SET views = views + 1 WHERE photo_id = "+photo_id);
+	    rset = stmt.executeQuery("SELECT views FROM popularity WHERE photo_id = "+photo_id);
+	    rset.next();
+	    views = rset.getInt("views");
+	    
 } catch( Exception ex ) {
 	    out.println(ex.getMessage() );
 	}
@@ -71,6 +81,9 @@ try {
 <tr>
 <td>Description:</td>
 <td><%=description%></td>
+<tr>
+<td>Views:</td>
+<td><%=views%></td>
 </table>
 
 <table>
