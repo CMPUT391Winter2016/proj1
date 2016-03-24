@@ -30,6 +30,7 @@ String sql = "DELETE FROM images WHERE photo_id = "+photo_id;
 try{ 
 stmt = conn.createStatement();
 stmt.executeQuery(sql);
+stmt.executeQuery("DELETE FROM popularity WHERE photo_id = "+photo_id);
 
 } catch(Exception ex){ out.println("broke" + ex.getMessage() + "");
 	 }
