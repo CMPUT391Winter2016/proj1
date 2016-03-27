@@ -1,5 +1,8 @@
 <%@ page import="java.io.*, java.sql.*, java.util.*, oracle.sql.*, oracle.jdbc.*" %>
 <%
+session.removeAttribute("user_option");
+session.removeAttribute("subject_option");
+session.removeAttribute("date_option");
 
 String driverName = session.getAttribute("dbdriver").toString();
 String dbname = session.getAttribute("dbname").toString();
@@ -74,79 +77,10 @@ rset2 = stmt2.executeQuery(subjects);
 <br>
 Select the information to analyze.
 <form method ="post" action="olap.jsp" name="make_olap">
-<br>
-Usernames:<br>
-<select size = "5">
-<%
-int i = 1;
-while(rset.next()){
-out.println("<option>" + i + ": " + rset.getString(1) +"</option>");
-i++;
-}
-%>
-</select>
-<br>
-
-Subjects:<br>
-<select size = "5">
-<%
-int j = 1;
-while(rset2.next()){
-out.println("<option>" + j + ": " + rset2.getString(1) +"</option>");
-j++;
-}
-%>
-</select>
-<br>
-
-<%
-/*
-Code for creating a calender in javascript for date selection, if browser doesn't support HTML5: JavascriptKit:
-http://www.javascriptkit.com/javatutors/createelementcheck2.shtml
-
-Changing a javascript date picker into yyyy-mm-dd format: StackOverFlow user Pete Naylor:
-http://stackoverflow.com/questions/16025441/jquery-datepicker-change-date-format-to-yyyy-mm-dd-php
-*/
-%>
-
-<script type="text/javascript">
-    var datefield=document.createElement("input")
-    datefield.setAttribute("type", "date")
-    if (datefield.type!="date"){ //if browser doesn't support input type="date", load files for jQuery UI Date Picker
-        document.write('<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />\n')
-        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n')
-        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n') 
-    }
-</script>
- 
-<script>
-if (datefield.type!="date"){ //if browser doesn't support input type="date", initialize date picker widget:
-    jQuery(function($){ //on document.ready
-        $('#birthday').datepicker();
-    })
-}
-
-$(function(){
-        $("#to").datepicker({ dateFormat: 'yy-mm-dd' });
-        $("#from").datepicker({ dateFormat: 'yy-mm-dd' }).bind("change",function(){
-            var minValue = $(this).val();
-            minValue = $.datepicker.parseDate("yy-mm-dd", minValue);
-            minValue.setDate(minValue.getDate());
-            $("#to").datepicker( "option", "minDate", minValue );
-        })
-    });
-</script>
-
-<br>
-<center>
-(optional)
-From: 
-<input type="date" id="from" name = "from" placeholder = "The Dawn of Time" />
-To: 
-<input type="date" id="to" name = "to" placeholder = "Now" />
-<br>
-
-<input type = "submit" value = "Generate" name = "enter_olap"></input>
+<input type="checkbox" name="user_option" value="user_option">Users<br>
+<input type="checkbox" name="subject_option" value="subject_option">Subject<br>
+<input type="checkbox" name="date_option" value="date_option">Date Period<br>
+<input type = "submit" value="Generate" name ="enter_olap"></input>
 </form>
 <p>
 
