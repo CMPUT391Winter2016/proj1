@@ -55,10 +55,14 @@ try {
 	       	 description = rset.getString("description");
 		 }
 	    date = rset.getString("timing");
-	    stmt.executeUpdate("UPDATE popularity SET views = views + 1 WHERE photo_id = "+photo_id);
-	    rset = stmt.executeQuery("SELECT views FROM popularity WHERE photo_id = "+photo_id);
-	    rset.next();
-	    views = rset.getInt("views");
+	    rset = stmt.executeQuery("SELECT * from viewed WHERE photo_id = "+photo_id+" AND viewee = '"+session.getAttribute("userName")+"'");
+	    if(!rset.next()){
+		stmt.execute("INSERT INTO viewed values("+photo_id+", '"+session.getAttribute("userName")+"')");
+		}
+	    //stmt.executeUpdate("UPDATE popularity SET views = views + 1 WHERE photo_id = "+photo_id);
+	    //rset = stmt.executeQuery("SELECT views FROM popularity WHERE photo_id = "+photo_id);
+	    //rset.next();
+	    //views = rset.getInt("views");
 	    
 } catch( Exception ex ) {
 	    out.println(ex.getMessage() );
@@ -97,8 +101,8 @@ out.println("<tr>");
 out.println("<td>Description:</td>");
 out.println("<td>"+description+"</td>");
 out.println("<tr>");
-out.println("<td>Views:</td>");
-out.println("<td>"+views+"</td>");
+//out.println("<td>Views:</td>");
+//out.println("<td>"+views+"</td>");
 out.println("</table>");
 
 out.println("<table>");

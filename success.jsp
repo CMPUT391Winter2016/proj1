@@ -76,7 +76,7 @@ out.println("<a href=\"analysis.jsp\">Analysis</a> | ");
 <%
 
 	   
-	    ResultSet rst = stmt.executeQuery("SELECT * FROM (SELECT photo_id, DENSE_RANK() OVER(order by views desc) as rank FROM popularity) where rank < 6");
+	    ResultSet rst = stmt.executeQuery("SELECT * FROM (SELECT photo_id, DENSE_RANK() OVER(order by count desc) as rank FROM (select photo_id,count(*) as count from viewed group by photo_id)) where rank < 6");
 	    int count = 0;
 	    out.println("<table border='1px'>");
 	    while(rst.next()){
