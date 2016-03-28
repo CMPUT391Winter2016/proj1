@@ -11,24 +11,34 @@ String email = (request.getParameter("email")).trim().toLowerCase();
 String phone = (request.getParameter("phone")).trim();
 
 phone=phone.replaceAll("\\D+",""); //remove unnecessary characters
+String valid = "[a-zA-Z0-9]*";
 
-//check to see if username, password, and email are not blank
+//required fields cannot be blank
 if(userName.equals("") || passwd.equals("") || email.equals("")){
-//redirect to page with an error message
 
-   response.setStatus(response.SC_MOVED_TEMPORARILY);
-   response.setHeader("Location", "error_signup.html");
+  response.setStatus(response.SC_MOVED_TEMPORARILY);
+  response.setHeader("Location", "error_signup.html");
 
 }
 
-//check that the phone number is not too long
-if(phone.length()>10){
-//redirect to page with an error message
+//phone num cant be too long
+else if(phone.length()>10){
+
 
    response.setStatus(response.SC_MOVED_TEMPORARILY);
    response.setHeader("Location", "error_phone_signup.html");
 
 }
+
+//username can only contain letters and numbers
+
+else if(!userName.matches(valid)){
+
+response.setStatus(response.SC_MOVED_TEMPORARILY);
+   response.setHeader("Location", "error_signup_badchar.html");
+
+}
+else {
 
 
 //establish the connection to the underlying database
@@ -90,7 +100,7 @@ username_in_use=false;
 	eRset = stmt.executeQuery(email_check);
 
 	if(!eRset.next()){ //if their email is also not currently in use
-		//out.println(email+" is not currently in use");
+		
 		email_in_use = false;
 
 		//store this username in the database
@@ -113,7 +123,7 @@ username_in_use=false;
 			//out.println(email+" is already in use.");
 		response.setStatus(response.SC_MOVED_TEMPORARILY);
    		response.setHeader("Location", "error_in_use_signup.html");
-			}
+			} 
 
 	} else { //someone already is using this user name
 	response.setStatus(response.SC_MOVED_TEMPORARILY);
@@ -123,7 +133,7 @@ username_in_use=false;
 
 try{ conn.close();
  } catch(Exception ex){ out.println("" + ex.getMessage() + "");
-	 }
+	 }}
 	 } else {
 out.println("null!!");
 out.println("UserName:");
