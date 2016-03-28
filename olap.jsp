@@ -124,7 +124,8 @@ out.println("<tr>");
 
 String owner_string ="", subject_string = "", date_string="";
 String and1 =" AND ", and2 =" AND ";
-String where = "WHERE ";
+String where = "WHERE ", select = "owner_name, subject timing,count";
+
 if(session.getAttribute("user_option") != null && session.getAttribute("subject_option") != null && session.getAttribute("date_option") !=null && owner == null && subject == null && date1 == null && date2 == null){
 where = "";
 }
@@ -155,17 +156,25 @@ if(session.getAttribute("subject_option") != null){
 }
 
 if(session.getAttribute("date_option") != null){
+  select = "owner_name, sum(count) as count";
   if(date1 != null && date2 != null){
+  date_string = "timing >= to_date('"+date1+"', 'yyyy-mm-dd') AND timing <= to_date('"+date2+"', 'yyyy-mm-dd')";
    } else if (date1 != null){
+  date_string = "timing >= to_date('"+date1+"', 'yyyy-mm-dd')";
    } else if (date2 != null){
+  date_string = "timing <= to_date('"+date2+"', 'yyyy-mm-dd')";
    } else {
      and2 = "";
+   }
+   if(request.getParameter("filter") == null){
+      date_string = date_string + " AND owner_name is not null AND to_char(timing, 'yyyy') is not null GROUP BY to_char(timing, 'yyyy'), owner_name";
    }
 } else {
   date_string = "timing is NULL";
 }
 
-String query = "SELECT owner_name,subject,timing, count FROM image_cube "+where+owner_string+and1+subject_string+and2+date_string;
+String query = "SELECT "+select+" FROM image_cube "+where+owner_string+and1+subject_string+and2+date_string;
+out.println(query);
 
 try{ 
 stmt = conn.createStatement();
