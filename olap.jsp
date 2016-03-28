@@ -99,81 +99,92 @@ if(session.getAttribute("date_option") != null){
 
 %>
 </table>
-<input type='submit' value='Restart' formaction='analysis.jsp'>
 <input type='submit'>
+<input type='submit' value='Restart' formaction='analysis.jsp'>
+
 </form>
 <center><h1>Report</h1>
 <table border='1px'>
 <%
-String owner = request.getParameter("owner");
-String subject = request.getParameter("subject");
+String owner_option = "", subject_option ="", date_option="";
+String owner = "", subject ="";
+if (request.getParameter("owner") != null){
+owner = request.getParameter("owner");
+}
+if (request.getParameter("subject") != null){
+subject = request.getParameter("subject");
+}
 String date1 = request.getParameter("date1");
 String date2 = request.getParameter("date2");
-
+String filter = request.getParameter("filter");
 if(session.getAttribute("user_option") != null){
-  out.println("<td>User</td>");
+owner_option = session.getAttribute("user_option").toString();
 }
 if(session.getAttribute("subject_option") != null){
-  out.println("<td>Subject</td>");
+subject_option = session.getAttribute("subject_option").toString();
 }
 if(session.getAttribute("date_option") != null){
+date_option = session.getAttribute("date_option").toString();
+}
+
+if(!owner_option.equals("")){
+  out.println("<td>User</td>");
+}
+if(!subject_option.equals("")){
+  out.println("<td>Subject</td>");
+}
+if(!date_option.equals("")){
   out.println("<td>Date Period</td>");
 }
 out.println("<td>Image Count</td>");
 out.println("<tr>");
 
-String owner_string ="", subject_string = "", date_string="";
-String and1 =" AND ", and2 =" AND ";
-String where = "WHERE ", select = "owner_name, subject timing,count";
 
-if(session.getAttribute("user_option") != null && session.getAttribute("subject_option") != null && session.getAttribute("date_option") !=null && owner == null && subject == null && date1 == null && date2 == null){
-where = "";
-}
+String query = "";
 
-if(session.getAttribute("user_option") != null){
-   if(owner != null){
-     owner_string = "owner_name = '"+owner+"'";
-   } else {
-     owner_string = "";
-     and1 = "";
+if(!owner_option.equals("") && !subject_option.equals("") && !date_option.equals("")){
+
+} else if (!owner_option.equals("") && !subject_option.equals("")) {
+  if (!owner.equals("")){
+     if (!subject.equals("")){
+     	query = "SELECT owner_name, subject, count FROM image_cube WHERE owner_name = '"+owner+"' " + 
+	      "AND subject = '"+subject+"' AND timing is null";
+     } else {
+       query = "SELECT owner_name, subject, count FROM image_cube WHERE owner_name ='"+owner+"' " +
+       	     "AND subject is not null AND timing is null";
      }
-} else {
-  owner_string = "owner_name is NULL";
-}
-
-if(session.getAttribute("subject_option") != null){
-   if(subject != null){
-     subject_string = "subject = '"+subject+"'";
-   } else {
-     subject_string="";
-     and2 = "";
-     if(date1 == null && date2 == null && session.getAttribute("date_option") != null){
-       and1="";
+  } else {
+    if (!subject.equals("")){
+       query = "SELECT owner_name, subject, count FROM image_cube WHERE owner_name is not null " + 
+	      "AND subject = '"+subject+"' AND timing is null";
+     } else {
+       query = "SELECT owner_name, subject, count FROM image_cube WHERE owner_name is not null " + 
+	      "AND subject is not null AND timing is null";
      }
-     }
-} else {
-  subject_string = "subject is NULL";
+  }
+
+} else if (!owner_option.equals("") && !date_option.equals("")){
+
+} else if (!subject_option.equals("") && !date_option.equals("")){
+
+} else if(!owner_option.equals("")){
+  if (!owner.equals("")){
+     query="SELECT owner_name, count FROM image_cube WHERE owner_name = '"+owner+"' AND subject is null AND timing is null";
+  } else {
+    query="SELECT owner_name, count FROM image_cube WHERE owner_name is not null AND subject is null AND timing is null";
+  }
+} else if (!subject_option.equals("")){
+  if (!subject.equals("")){
+     query="SELECT subject, count FROM image_cube WHERE owner_name is null AND subject ='"+subject+"' AND timing is null";
+  } else {
+    query="SELECT subject, count FROM image_cube WHERE owner_name is null AND subject is not null AND timing is null";
+  }
+}else if (!date_option.equals("")){
+
 }
 
-if(session.getAttribute("date_option") != null){
-  select = "owner_name, sum(count) as count";
-  if(date1 != null && date2 != null){
-  date_string = "timing >= to_date('"+date1+"', 'yyyy-mm-dd') AND timing <= to_date('"+date2+"', 'yyyy-mm-dd')";
-   } else if (date1 != null){
-  date_string = "timing >= to_date('"+date1+"', 'yyyy-mm-dd')";
-   } else if (date2 != null){
-  date_string = "timing <= to_date('"+date2+"', 'yyyy-mm-dd')";
-   } else {
-     and2 = "";
-   }
-   if(request.getParameter("filter") == null){
-      date_string = date_string + " AND owner_name is not null AND to_char(timing, 'yyyy') is not null GROUP BY to_char(timing, 'yyyy'), owner_name";
-   }
-} else {
-  date_string = "timing is NULL";
-}
 
-String query = "SELECT "+select+" FROM image_cube "+where+owner_string+and1+subject_string+and2+date_string;
+
 out.println(query);
 
 try{ 
