@@ -27,5 +27,9 @@ http://www.javascriptkit.com/javatutors/createelementcheck2.shtml
 Changing a javascript date picker into yyyy-mm-dd format: StackOverFlow user Pete Naylor:
 http://stackoverflow.com/questions/16025441/jquery-datepicker-change-date-format-to-yyyy-mm-dd-php
 
+Right-aligning in HTML, W3schools:
+http://www.w3schools.com/tags/att_p_align.asp
+
+
 
 Image hosting website by Charles Rozsa, Nicole Lovas, and Zainab Alsharif For CMPUT391 winter 2016  

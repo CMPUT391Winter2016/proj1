@@ -62,7 +62,6 @@ DriverManager.registerDriver((Driver) drvClass.newInstance());
 
  try{ 
 //establish the connection 
-//conn = DriverManager.getConnection(dbstring,"nlovas","D4v3spr1t3");
 conn = DriverManager.getConnection(DBstring,DBname,DBpw);
 conn.setAutoCommit(false);
  } catch(Exception ex){ out.println("" + ex.getMessage() + "");
