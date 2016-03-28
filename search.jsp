@@ -1,5 +1,35 @@
 <%@ page import="java.sql.* ,java.util.* , java.io.*" %> 
 
+<html>
+<head>
+<title>Search Results</title>
+</head>
+<body>
+
+
+
+
+<table border="1" width = "1650" height = "1000" cellpadding = "15" cellspacing = "10" bgcolor="#bedbeb">
+
+<tr bgcolor="#FFFFFF">
+<td height = "20%" bgcolor = "#3c94c3" valign = "bottom"><font size ="40" font face = "courier"> <p align = "right"><font color="183a4e">Photo</font><font color="#FFFFFF">synthesis</p></font></td>
+</tr>
+
+<tr bgcolor="#FFFFFF">
+
+
+<td height = "3%" cellpadding="30" cellspacing = "30">|| <a href="addphoto.jsp">Add Photo</a> | 
+
+<a href="PictureBrowse.jsp">Search Photos</a> | <a href="groups.jsp">Groups</a> |
+<a href="logout.jsp">Logout</a> ||</td>
+
+</tr>
+
+<tr bgcolor="#FFFFFF">
+<td>
+
+
+
 <% 
 //get databse driver information from session
 String m_driverName = session.getAttribute("dbdriver").toString();
@@ -33,10 +63,10 @@ out.println("");
 String[] dropdown = request.getParameterValues("orderby");
 out.println("your choice was... " + dropdown[0]);
 
-out.println("<br>Your first date was... " +request.getParameter("from"));
+out.println("<br>Your first date was... " +request.getParameter("from").trim());
 
-String date1 = request.getParameter("from");
-String date2 = request.getParameter("to");
+String date1 = request.getParameter("from").trim();
+String date2 = request.getParameter("to").trim();
 
 
 
@@ -44,7 +74,7 @@ String date2 = request.getParameter("to");
 //user chooses to search with no keyword, second date only, by relevance - not allowed as this doesnt make sense
 //user chooses to search with no keyword, both dates, by relevance - not allowed as this doesnt make sense
 //this covers each of those cases:
-if( request.getParameter("search").equals("") && dropdown[0].equals("relevance") ) {
+if( request.getParameter("search").equals("") && dropdown[0].equals("relevance") && date2.equals("") && date1.equals("") ) {
  response.setStatus(response.SC_MOVED_TEMPORARILY);
    response.setHeader("Location", "error_PictureBrowse.jsp");
 }
@@ -253,7 +283,7 @@ while(rset.next()) {
 
 
 //user chooses to search by relevance, first date only
-else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("relevance") && date2.equals("") ) {
+else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("relevance") && date2.equals("") && (!date1.equals("")) ) {
 
 String test = "(SELECT i.photo_id, score(1) as score1, score(2) as score2, score(3) as score3 FROM images i, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = i.permitted AND i.timing >= to_date('"+date1+"', 'yyyy-mm-dd'))  AND ( contains(i.description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(i.subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(i.place,'" +request.getParameter("search")+ "', 3) > 0 ))";
 
@@ -290,7 +320,7 @@ while(rset.next()) {
 
 
 //user chooses to search by relevance, second date only
-else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("relevance") && date1.equals("") ) {
+else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("relevance") && date1.equals("") && (!date2.equals("")) ) {
 
 String test = "(SELECT i.photo_id, score(1) as score1, score(2) as score2, score(3) as score3 FROM images i, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = i.permitted AND i.timing <= to_date('"+date2+"', 'yyyy-mm-dd'))  AND ( contains(i.description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(i.subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(i.place,'" +request.getParameter("search")+ "', 3) > 0 ))";
 
@@ -357,7 +387,7 @@ while(rset.next()) {
 
 
 //user chooses to search by oldest, first date only
-else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("oldest") && date2.equals("") ) {
+else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("oldest") && date2.equals("") && (!date1.equals("")) ) {
 
 String test = "(SELECT i.photo_id, i.timing FROM images i, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = i.permitted AND i.timing >= to_date('"+date1+"', 'yyyy-mm-dd'))  AND ( contains(i.description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(i.subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(i.place,'" +request.getParameter("search")+ "', 3) > 0 ))";
 
@@ -392,7 +422,7 @@ while(rset.next()) {
 
 
 //user chooses to search by oldest, second date only
-else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("oldest") && date1.equals("") ) {
+else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("oldest") && date1.equals("") && (!date2.equals("")) ) {
 
 String test = "(SELECT i.photo_id, i.timing FROM images i, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = i.permitted AND i.timing <= to_date('"+date2+"', 'yyyy-mm-dd'))  AND ( contains(i.description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(i.subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(i.place,'" +request.getParameter("search")+ "', 3) > 0 ))";
 
@@ -462,7 +492,7 @@ while(rset.next()) {
 
 
 //user chooses to search by newest, first date only
-else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("recent") && date2.equals("") ) {
+else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("recent") && date2.equals("") && (!date1.equals("")) ) {
 
 String test = "(SELECT i.photo_id, i.timing FROM images i, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = i.permitted AND i.timing >= to_date('"+date1+"', 'yyyy-mm-dd'))  AND ( contains(i.description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(i.subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(i.place,'" +request.getParameter("search")+ "', 3) > 0 ))";
 
@@ -497,7 +527,7 @@ while(rset.next()) {
 
 
 //user chooses to search by newest, second date only
-else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("recent") && date1.equals("") ) {
+else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("recent") && date1.equals("") && (!date2.equals("")) ) {
 
 String test = "(SELECT i.photo_id, i.timing FROM images i, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = i.permitted AND i.timing <= to_date('"+date2+"', 'yyyy-mm-dd'))  AND ( contains(i.description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(i.subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(i.place,'" +request.getParameter("search")+ "', 3) > 0 ))";
 
@@ -603,6 +633,7 @@ while(rset.next()) {
 //search is blank, no dates select, by newest
 else if( (request.getParameter("search").equals("")) && dropdown[0].equals("recent") && date1.equals("") && date2.equals("") ) {
 
+
 String test = "(SELECT i.photo_id, i.timing FROM images i, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = i.permitted))";
 
 String test2 = "(SELECT photo_id, timing FROM images WHERE (owner_name = '"+session.getAttribute("userName")+"' OR permitted = 1) )";
@@ -637,6 +668,7 @@ while(rset.next()) {
 //user chooses to search by relevance, no dates
 else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("relevance") && date1.equals("") && date2.equals("") ) {
 
+
 String test = "(SELECT i.photo_id, score(1) as score1, score(2) as score2, score(3) as score3 FROM images i, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = i.permitted)  AND ( contains(i.description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(i.subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(i.place,'" +request.getParameter("search")+ "', 3) > 0 ))";
 
 String test2 = "(SELECT photo_id, score(1) as score1, score(2) as score2, score(3) as score3 FROM images WHERE (owner_name = '"+session.getAttribute("userName")+"' OR permitted = 1) AND ( contains(description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(place,'" +request.getParameter("search")+ "', 3) > 0 ))";
@@ -647,6 +679,7 @@ String test2 = "(SELECT photo_id, score(1) as score1, score(2) as score2, score(
 
 rset = doSearch.executeQuery();
 out.println("<center>");
+
 
 	out.println("<body>");
   	out.println("<table border='1px'>");
@@ -667,6 +700,8 @@ while(rset.next()) {
 
  } //user searches by most recent, no dates
 else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("recent") && date1.equals("") && date2.equals("")) {
+
+
 
 String test = "(SELECT i.photo_id as photo_id, i.timing as timing FROM images i, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = i.permitted)  AND ( contains(i.description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(i.subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(i.place,'" +request.getParameter("search")+ "', 3) > 0 ))";
 
@@ -704,6 +739,7 @@ while(rset.next()) {
 
 //user searches by oldest, no dates
 else if( (!request.getParameter("search").equals("")) && dropdown[0].equals("oldest") && date1.equals("") && date2.equals("")) {
+
 
 String test = "(SELECT i.photo_id as photo_id, i.timing as timing FROM images i, group_lists l WHERE (l.friend_id = '"+session.getAttribute("userName")+"' AND l.group_id = i.permitted)  AND ( contains(i.description,'" +request.getParameter("search")+ "', 1) > 0 OR contains(i.subject,'" +request.getParameter("search")+ "', 2) > 0 OR contains(i.place,'" +request.getParameter("search")+ "', 3) > 0 ))";
 
@@ -783,4 +819,11 @@ m_con.setAutoCommit(true); }
 //user searches by oldest, no dates
 
  %> 
+
+
+
+</td>
+</tr>
+
+</table>
 

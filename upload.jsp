@@ -1,3 +1,29 @@
+<html>
+<head>
+<title>Photo Upload</title>
+</head>
+
+<table border="1" width = "1650" height = "1000" cellpadding = "15" cellspacing = "10" bgcolor="#bedbeb">
+
+<tr bgcolor="#FFFFFF">
+<td height = "20%" bgcolor = "#3c94c3" valign = "bottom"><font size ="40" font face = "courier"> <p align = "right"><font color="183a4e">Photo</font><font color="#FFFFFF">synthesis</p></font></td>
+</tr>
+
+<tr bgcolor="#FFFFFF">
+
+
+<td height = "3%" cellpadding="30" cellspacing = "30">|| <a href="addphoto.jsp">Add Photo</a> | 
+
+<a href="PictureBrowse.jsp">Search Photos</a> | <a href="groups.jsp">Groups</a> |
+<a href="logout.jsp">Logout</a> ||</td>
+
+</tr>
+
+<tr bgcolor="#FFFFFF">
+<td>
+
+
+
 <%@ page import="org.apache.commons.fileupload.DiskFileUpload, org.apache.commons.fileupload.FileItem, java.io.*, java.sql.*, java.util.*, oracle.sql.*, oracle.jdbc.*, java.awt.Image, java.awt.image.BufferedImage, javax.imageio.ImageIO" %>
 <%! int photo_id, group_id;
     String subject, location, description, date;
@@ -123,10 +149,17 @@ stmt.execute("INSERT INTO popularity values("+photo_id+", 0)");
 }
 conn.close();
 %>
-<html>
-<head>
-<title>Photo Upload</title>
-</head>
+
+
 
 <body>
 <a href="success.jsp">Home</a>
+
+
+
+
+
+</td>
+</tr>
+
+</table>
