@@ -107,16 +107,22 @@ if(session.getAttribute("date_option") != null){
 <table border='1px'>
 <%
 String owner_option = "", subject_option ="", date_option="";
-String owner = "", subject ="";
+String owner = "", subject ="", date1 ="", date2 ="", filter="";
 if (request.getParameter("owner") != null){
 owner = request.getParameter("owner");
 }
 if (request.getParameter("subject") != null){
 subject = request.getParameter("subject");
 }
-String date1 = request.getParameter("date1");
-String date2 = request.getParameter("date2");
-String filter = request.getParameter("filter");
+if (request.getParameter("date1") != null){
+date1 = request.getParameter("date1");
+}
+if (request.getParameter("date2") != null){
+date2 = request.getParameter("date2");
+}
+if (request.getParameter("filter") != null){
+filter = request.getParameter("filter");
+}
 if(session.getAttribute("user_option") != null){
 owner_option = session.getAttribute("user_option").toString();
 }
@@ -134,7 +140,16 @@ if(!subject_option.equals("")){
   out.println("<td>Subject</td>");
 }
 if(!date_option.equals("")){
-  out.println("<td>Date Period</td>");
+  if(filter.equals("year") || filter.equals("")){
+    out.println("<td>Year</td>");
+  } else if (filter.equals("month")) {
+    out.println("<td>Year</td>");
+    out.println("<td>Month</td>");
+  } else {
+    out.println("<td>Year</td>");
+    out.println("<td>Month</td>");
+    out.println("<td>Week</td>");
+    }
 }
 out.println("<td>Image Count</td>");
 out.println("<tr>");
@@ -179,8 +194,34 @@ if(!owner_option.equals("") && !subject_option.equals("") && !date_option.equals
   } else {
     query="SELECT subject, count FROM image_cube WHERE owner_name is null AND subject is not null AND timing is null";
   }
-}else if (!date_option.equals("")){
+//If on the date option is selected
+} else if (!date_option.equals("")){
+  //Set the select and group by sections of query
+  String select="", group="";
+  if (filter.equals("year") || filter.equals("")) {
+     select = "SELECT to_char(timing, 'yyyy') as year, sum(count) as count";
+     group = "GROUP BY to_char(timing, 'yyyy')"; 
+  } else if (filter.equals("month")){
+     select = "SELECT to_char(timing, 'yyyy') as year, to_char(timing, 'mm') as month, sum(count) as count";
+     group = "GROUP BY to_char(timing, 'yyyy'), to_char(timing, 'mm')";
+  } else {
+     select = "SELECT to_char(timing, 'yyyy') as year, to_char(timing, 'mm') as month, to_char(timing, 'ww') as week, sum(count) as count";
+     group = "GROUP BY to_char(timing, 'yyyy'), to_char(timing, 'mm'), to_char(timing, 'ww')";
+  } 
+  //Construct the rest of the query based off of date inputs
+  if(!date1.equals("") && !date2.equals("")){
+    query = select+" FROM image_cube WHERE owner_name is null AND subject is null AND timing <= to_date('"+date2+"', 'yyyy-mm-dd') " +
+    	    "AND timing >= to_date('"+date1+"', 'yyyy-mm-dd') "+group;
+  } else if (!date1.equals("")) {
+    query = select+" FROM image_cube WHERE owner_name is null AND subject is null AND timing >= to_date('"+date1+"', 'yyyy-mm-dd') "+group;
+  } else if (!date2.equals("")) {
+    query = select+" FROM image_cube WHERE owner_name is null AND subject is null AND timing <= to_date('"+date2+"', 'yyyy-mm-dd') "+group;
+  } else {
 
+    query = select+" FROM image_cube WHERE owner_name is null AND subject is null AND timing is not null "+group;
+
+  }
+  
 }
 
 
@@ -196,6 +237,20 @@ if(session.getAttribute("user_option") != null){
 }
 if(session.getAttribute("subject_option") != null){
   out.println("<td>"+rset.getString("subject"));
+}
+if(!date_option.equals("")){
+  if(filter.equals("year") || filter.equals("")){
+    out.println("<td>"+rset.getString("year"));
+  } else if(filter.equals("month")){
+    out.println("<td>"+rset.getString("year"));
+    out.println("<td>"+rset.getString("month"));
+  } else {
+    out.println("<td>"+rset.getString("year"));
+    out.println("<td>"+rset.getString("month"));
+    out.println("<td>"+rset.getString("week"));
+
+  }
+
 }
 out.println("<td>"+rset.getString("count"));
 out.println("<tr>");
