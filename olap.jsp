@@ -159,6 +159,54 @@ String query = "";
 
 if(!owner_option.equals("") && !subject_option.equals("") && !date_option.equals("")){
 
+  //Create query for rest
+  if(!owner.equals("")) {
+     if(!subject.equals("")) {
+       if (!date1.equals("") && !date2.equals("")) {
+
+       } else if (!date1.equals("")) {
+
+       } else if (!date2.equals("")) {
+
+       } else {
+
+       }
+     } else {
+       if (!date1.equals("") && !date2.equals("")) {
+
+       } else if (!date1.equals("")) {
+
+       } else if (!date2.equals("")) {
+
+       } else {
+
+       }
+    }
+  } else {
+     if(!subject.equals("")) {
+       if (!date1.equals("") && !date2.equals("")) {
+
+       } else if (!date1.equals("")) {
+
+       } else if (!date2.equals("")) {
+
+       } else {
+
+       }
+     } else {
+       if (!date1.equals("") && !date2.equals("")) {
+
+       } else if (!date1.equals("")) {
+
+       } else if (!date2.equals("")) {
+
+       } else {
+
+       }
+
+  }
+}
+
 } else if (!owner_option.equals("") && !subject_option.equals("")) {
   if (!owner.equals("")){
      if (!subject.equals("")){
@@ -180,7 +228,72 @@ if(!owner_option.equals("") && !subject_option.equals("") && !date_option.equals
 
 } else if (!owner_option.equals("") && !date_option.equals("")){
 
+  //Set the select and group by sections of query
+  String select="", group="";
+  if (filter.equals("year") || filter.equals("")) {
+     select = "SELECT owner_name, to_char(timing, 'yyyy') as year, sum(count) as count";
+     group = "GROUP BY owner_name, to_char(timing, 'yyyy')"; 
+  } else if (filter.equals("month")){
+     select = "SELECT owner_name, to_char(timing, 'yyyy') as year, to_char(timing, 'mm') as month, sum(count) as count";
+     group = "GROUP BY owner_name, to_char(timing, 'yyyy'), to_char(timing, 'mm')";
+  } else {
+     select = "SELECT owner_name, to_char(timing, 'yyyy') as year, to_char(timing, 'mm') as month, to_char(timing, 'ww') as week, sum(count) as count";
+     group = "GROUP BY owner_name, to_char(timing, 'yyyy'), to_char(timing, 'mm'), to_char(timing, 'ww')";
+  } 
+  
+  //Set the rest of the query
+  if(!owner.equals("")) {
+     if (!date1.equals("") && !date2.equals("")) {
+     	query = select+" FROM image_cube WHERE owner_name ='"+owner+"' AND subject is null" +
+	      	" AND timing <= to_date('"+date2+"', 'yyyy-mm-dd') AND timing >= to_date('"+date1+"', 'yyyy-mm-dd') "+group;
+     } else if (!date1.equals("")) {
+       query = select+" FROM image_cube WHERE owner_name ='"+owner+"' AND subject is null" +
+	      	" AND timing >= to_date('"+date1+"', 'yyyy-mm-dd') "+group;
+     } else if (!date2.equals("")) {
+       query = select+" FROM image_cube WHERE owner_name ='"+owner+"' AND subject is null" +
+	      	" AND timing <= to_date('"+date2+"', 'yyyy-mm-dd') "+group;
+     } else {
+       query = select+" FROM image_cube WHERE owner_name = '"+owner+"' AND subject is null AND timing is not null "+group;
+     }
+  } else {
+      if (!date1.equals("") && !date2.equals("")) {
+      	 query = select+" FROM image_cube WHERE owner_name is not null AND subject is null" +
+	      	" AND timing <= to_date('"+date2+"', 'yyyy-mm-dd') AND timing >= to_date('"+date1+"', 'yyyy-mm-dd') "+group;
+     } else if (!date1.equals("")) {
+       query = select+" FROM image_cube WHERE owner_name is not null AND subject is null" +
+	      	" AND timing >= to_date('"+date1+"', 'yyyy-mm-dd') "+group;
+     } else if (!date2.equals("")) {
+       query = select+" FROM image_cube WHERE owner_name is not null AND subject is null" +
+	      	" AND timing <= to_date('"+date2+"', 'yyyy-mm-dd') "+group;
+     } else {
+       query = select+" FROM image_cube WHERE owner_name is not null AND subject is null AND timing is not null "+group;
+     }
+  }
+
 } else if (!subject_option.equals("") && !date_option.equals("")){
+
+   //Set the rest of the query
+  if(!subject.equals("")) {
+     if (!date1.equals("") && !date2.equals("")) {
+
+     } else if (!date1.equals("")) {
+
+     } else if (!date2.equals("")) {
+
+     } else {
+
+     }
+  } else {
+      if (!date1.equals("") && !date2.equals("")) {
+
+     } else if (!date1.equals("")) {
+
+     } else if (!date2.equals("")) {
+
+     } else {
+
+     }
+ }
 
 } else if(!owner_option.equals("")){
   if (!owner.equals("")){
@@ -217,9 +330,7 @@ if(!owner_option.equals("") && !subject_option.equals("") && !date_option.equals
   } else if (!date2.equals("")) {
     query = select+" FROM image_cube WHERE owner_name is null AND subject is null AND timing <= to_date('"+date2+"', 'yyyy-mm-dd') "+group;
   } else {
-
     query = select+" FROM image_cube WHERE owner_name is null AND subject is null AND timing is not null "+group;
-
   }
   
 }
