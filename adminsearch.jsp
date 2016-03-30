@@ -59,11 +59,11 @@ try {
 
 if (request.getParameter("enter_search") != null) { 
 out.println("");
- out.println("Query is " + request.getParameter("search"));
+ out.println("<center>Query is " + request.getParameter("search"));
  out.println("");
 
 String[] dropdown = request.getParameterValues("orderby");
-out.println("your choice was... " + dropdown[0]);
+out.println("<center>Your choice was... " + dropdown[0]);
 
 //out.println("<br>Your first date was... " +request.getParameter("from").trim());
 
