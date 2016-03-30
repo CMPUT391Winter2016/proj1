@@ -28,8 +28,8 @@
 <tr bgcolor="#FFFFFF">
 <td>
 
-
-
+<center>Admin Search Results
+<br>
 <% 
 //a search page for admin's results. admin doesn't care about permissions.
 
