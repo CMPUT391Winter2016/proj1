@@ -49,10 +49,16 @@ rset2 = stmt2.executeQuery(subjects);
 </head>
 <body>
 
+<html>
+<head>
+<title>Sign up!</title>
+</head>
+<body>
+
 <table border="1" width = "1650" height = "1000" cellpadding = "15" cellspacing = "10" bgcolor="#bedbeb">
 
 <tr bgcolor="#FFFFFF">
-<td height = "20%">put header here</td>
+<td height = "20%" bgcolor = "#3c94c3" valign = "bottom"><font size ="40" font face = "courier"> <p align = "right"><font color="183a4e">Photo</font><font color="#FFFFFF">synthesis</p></font></td>
 </tr>
 
 <tr bgcolor="#FFFFFF">

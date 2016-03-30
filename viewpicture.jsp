@@ -3,6 +3,14 @@
     int views;
     boolean allowed; %>
 <%
+
+
+//check to see if the user is an admin
+boolean isAdmin = false;
+if(session.getAttribute("userName").equals("admin")){
+isAdmin=true;
+}
+
 //Is the user logged in, if not redirect to login
 if (session.getAttribute("userName") == null)
 {
@@ -41,7 +49,7 @@ try{
 } catch( Exception ex) {}
 
 //If the user is allowed to see the picture, display with details
-if(allowed){
+if(allowed||isAdmin){
 try {
 	    Statement stmt = conn.createStatement();
 	    ResultSet rset = stmt.executeQuery(query);

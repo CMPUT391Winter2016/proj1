@@ -50,7 +50,7 @@ conn = DriverManager.getConnection(DBstring,DBname,DBpw);
  } catch(Exception ex){ out.println("" + ex.getMessage() + "");
 	 }
 
-
+/*
 
 try {
 	    Statement stmt = conn.createStatement();
@@ -83,13 +83,21 @@ try {
 		out.println( ex.getMessage() );
 	    }
 	}
-
+*/
 %>
 
 <body>
 <center><b>Search</b></center>
 
+<%
 
+//determine if the user is the admin
+boolean isAdmin = false;
+if(session.getAttribute("userName").equals("admin")){
+isAdmin=true;
+}
+if(isAdmin==false){
+%>
 <center><form method ="post" action="search.jsp" name="searchform">
 <input type = "text" placeholder = "Search" name = "search"></input>
 <br>
@@ -99,6 +107,26 @@ Order by
   <option value="recent">Recent</option>
   <option value="oldest">Oldest</option>
 </select>
+<%
+}
+else {
+%>
+<center><form method ="post" action="adminsearch.jsp" name="searchform">
+<input type = "text" placeholder = "Search" name = "search"></input>
+<br>
+Order by 
+ <select id = "orderby" name="orderby">
+  <option value="relevance">Relevance</option>
+  <option value="recent">Recent</option>
+  <option value="oldest">Oldest</option>
+</select>
+<%
+}
+
+
+%>
+
+
 
 <%
 /*
