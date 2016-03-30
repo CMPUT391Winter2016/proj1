@@ -54,7 +54,7 @@ conn = DriverManager.getConnection(DBstring,DBname,DBpw);
  } catch(Exception ex){ out.println("" + ex.getMessage() + "");
 	 }
 
-
+/*
 
 try {
 	    Statement stmt = conn.createStatement();
@@ -87,7 +87,7 @@ try {
 		out.println( ex.getMessage() );
 	    }
 	}
-
+*/
 %>
 
 <body>

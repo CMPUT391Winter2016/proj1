@@ -28,7 +28,8 @@
 <tr bgcolor="#FFFFFF">
 <td>
 
-
+<center>Admin Search Results
+<br>
 
 <% 
 //get databse driver information from session
