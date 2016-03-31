@@ -391,6 +391,10 @@ if(!owner_option.equals("") && !subject_option.equals("") && !date_option.equals
     query = select+" FROM image_cube WHERE owner_name is null AND subject is null AND timing is not null "+group;
   }
   
+} else {
+
+  query = "SELECT count FROM image_cube WHERE owner_name is null AND subject is null AND timing is null";
+
 }
 
 
