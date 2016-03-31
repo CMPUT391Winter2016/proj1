@@ -77,7 +77,7 @@ ResultSet rset = null;
 
 <center><font size=6><b>OLAP Data Analysis</b></font>
 <table border='1px'>
-<form>
+<form method='post' action='olap.jsp'>
 <% 
 if(session.getAttribute("user_option") != null){
 	 out.println("<td>Users</td>");

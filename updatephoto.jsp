@@ -18,7 +18,6 @@ DriverManager.registerDriver((Driver) drvClass.newInstance());
  try{ 
 //establish the connection 
 conn = DriverManager.getConnection(dbstring,dbname, dbpassword);
-conn.setAutoCommit(false);
  } catch(Exception ex){ out.println(dbstring + ex.getMessage() + dbname);
 	 }
 //select the user table from the underlying db and validate the user name and password
