@@ -58,7 +58,7 @@ if(session.getAttribute("userName").toString().equals("admin")){
 out.println("<a href=\"analysis.jsp\">Analysis</a> | ");
 }
 %>
-<a href="logout.jsp">Logout</a> ||</td>
+<a href="logout.jsp">Logout</a> | <a href="help.jsp">Help</a> ||</td>
 
 </tr>
 

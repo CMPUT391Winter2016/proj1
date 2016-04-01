@@ -75,7 +75,7 @@ rset2 = stmt2.executeQuery(subjects);
 
 <a href="analysis.jsp">Analysis</a> | 
 
- <a href="logout.jsp">Logout</a> ||</td>
+ <a href="logout.jsp">Logout</a> | <a href="help.jsp">Help</a> ||</td>
 
 </tr>
 
