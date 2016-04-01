@@ -10,6 +10,33 @@ if(request.getParameter("date_option") !=null){
    session.setAttribute("date_option", "true");
 }
 
+String owner_option = "", subject_option ="", date_option="";
+String owner = "", subject ="", date1 ="", date2 ="", filter="";
+if (request.getParameter("owner") != null){
+owner = request.getParameter("owner");
+}
+if (request.getParameter("subject") != null){
+subject = request.getParameter("subject");
+}
+if (request.getParameter("date1") != null){
+date1 = request.getParameter("date1");
+}
+if (request.getParameter("date2") != null){
+date2 = request.getParameter("date2");
+}
+if (request.getParameter("filter") != null){
+filter = request.getParameter("filter");
+}
+if(session.getAttribute("user_option") != null){
+owner_option = session.getAttribute("user_option").toString();
+}
+if(session.getAttribute("subject_option") != null){
+subject_option = session.getAttribute("subject_option").toString();
+}
+if(session.getAttribute("date_option") != null){
+date_option = session.getAttribute("date_option").toString();
+}
+
 String driverName = session.getAttribute("dbdriver").toString();
 String dbname = session.getAttribute("dbname").toString();
 String dbpassword = session.getAttribute("dbpassword").toString();
@@ -90,17 +117,36 @@ if(session.getAttribute("date_option") != null){
 }
 out.println("<tr>");
 if(session.getAttribute("user_option") != null){
+         if (owner.equals("")){
 	 out.println("<td><input type='text' name='owner' placeholder='User'/></td>");
+	 } else {
+	   out.println("<td><input type='text' name='owner' placeholder='User' value='"+owner+"'/></td>");
+	 }
 }
 if(session.getAttribute("subject_option") != null){
-	 out.println("<td><input type='text' name='subject' placeholder='Subject'/></td>");
+         if (subject.equals("")){
+	   out.println("<td><input type='text' name='subject' placeholder='Subject'/></td>");
+	 } else {
+	   out.println("<td><input type='text' name='subject' placeholder='Subject' value='"+subject+"'/></td>");
+	 }
 }
 if(session.getAttribute("date_option") != null){
-	 out.println("<td><input type='date' name='date1'/> - <input type='date' name='date2'>");
+         
+	 out.println("<td><input type='date' name='date1' value='"+date1+"'/> - <input type='date' name='date2' value='"+date2+"'>");
 	 out.println("<br>");
-	 out.println("<input type='radio' name='filter' value='year' checked>Yearly");
-	 out.println("<input type='radio' name='filter' value='month'>Monthly");
-	 out.println("<input type='radio' name='filter' value='week'>Weekly");
+	 if (filter.equals("year") || filter.equals("")){
+	   out.println("<input type='radio' name='filter' value='year' checked>Yearly");
+	   out.println("<input type='radio' name='filter' value='month'>Monthly");
+	   out.println("<input type='radio' name='filter' value='week'>Weekly");
+	 } else if (filter.equals("month")){
+	   out.println("<input type='radio' name='filter' value='year'>Yearly");
+	   out.println("<input type='radio' name='filter' value='month' checked>Monthly");
+	   out.println("<input type='radio' name='filter' value='week'>Weekly");
+	 } else {
+	   out.println("<input type='radio' name='filter' value='year'>Yearly");
+	   out.println("<input type='radio' name='filter' value='month'>Monthly");
+	   out.println("<input type='radio' name='filter' value='week' checked>Weekly");
+	 }
 	 out.println("</td>");
 }
 
@@ -113,32 +159,7 @@ if(session.getAttribute("date_option") != null){
 <center><h1>Report</h1>
 <table border='1px'>
 <%
-String owner_option = "", subject_option ="", date_option="";
-String owner = "", subject ="", date1 ="", date2 ="", filter="";
-if (request.getParameter("owner") != null){
-owner = request.getParameter("owner");
-}
-if (request.getParameter("subject") != null){
-subject = request.getParameter("subject");
-}
-if (request.getParameter("date1") != null){
-date1 = request.getParameter("date1");
-}
-if (request.getParameter("date2") != null){
-date2 = request.getParameter("date2");
-}
-if (request.getParameter("filter") != null){
-filter = request.getParameter("filter");
-}
-if(session.getAttribute("user_option") != null){
-owner_option = session.getAttribute("user_option").toString();
-}
-if(session.getAttribute("subject_option") != null){
-subject_option = session.getAttribute("subject_option").toString();
-}
-if(session.getAttribute("date_option") != null){
-date_option = session.getAttribute("date_option").toString();
-}
+
 
 if(!owner_option.equals("")){
   out.println("<td>User</td>");
