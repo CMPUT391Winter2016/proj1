@@ -92,11 +92,13 @@ if (request.getParameter("orderby") != null){
 
 
 //Set the type of orderby
-String orderby = "";
+String orderby = "", groupby = "";
 if (dropdown.equals("recent")){
    orderby = " ORDER BY timing desc";
+   groupby = ", i.timing ";
 } else if (dropdown.equals("oldest")){
   orderby = " ORDER BY timing asc";
+  groupby = ", i.timing ";
 } else if (dropdown.equals("relevance") && !search.equals("")) {
   String[] terms = search.split(" ");
   String orderby6 = "", orderby3 = "", orderby1 = "";
@@ -116,6 +118,7 @@ if (dropdown.equals("recent")){
       } else {
       	orderby1 = orderby1 + " + score("+(i+3)+")";
       }
+      groupby = groupby + ", score("+(i+1)+"), score("+(i+2)+"), score("+(i+3)+")";
   }
   orderby = " ORDER BY 6*("+orderby6+") +  3*("+orderby3+") + ("+orderby1+")";
 }
@@ -132,37 +135,37 @@ if (!search.equals("")){
    if (!date1.equals("") && !date2.equals("")){
      if(username.equals("admin")){
        query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted = l.group_id WHERE "+
-       	       "timing between to_date('"+date1+"', 'yyyy-mm-dd') AND to_date('"+date2+"', 'yyyy-mm-dd')"+contains+" GROUP BY i.photo_id, i.timing " + orderby;
+       	       "timing between to_date('"+date1+"', 'yyyy-mm-dd') AND to_date('"+date2+"', 'yyyy-mm-dd')"+contains+" GROUP BY i.photo_id" + groupby + orderby;
      } else {
        query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted = l.group_id " +
       	      "WHERE (l.friend_id = '"+username+"' OR i.permitted = 1 OR i.owner_name = '"+username+"') AND timing between to_date('"+date1+"', 'yyyy-mm-dd') AND to_date('"+date2+"', 'yyyy-mm-dd')"
-	      +contains+" GROUP BY i.photo_id, timing "+ orderby;
+	      +contains+" GROUP BY i.photo_id" +groupby+ orderby;
      }
    } else if (!date1.equals("")){
      if(username.equals("admin")){
        query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted = l.group_id WHERE "+
-       	       "timing >= to_date('"+date1+"', 'yyyy-mm-dd')"+contains+" GROUP BY i.photo_id, i.timing " + orderby;
+       	       "timing >= to_date('"+date1+"', 'yyyy-mm-dd')"+contains+" GROUP BY i.photo_id"+groupby + orderby;
      } else {
        query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted = l.group_id " +
       	      "WHERE (l.friend_id = '"+username+"' OR i.permitted = 1 OR i.owner_name = '"+username+"') AND timing >= to_date('"+date1+"', 'yyyy-mm-dd')"
-	      +contains+" GROUP BY i.photo_id, timing "+ orderby;
+	      +contains+" GROUP BY i.photo_id"+groupby+ orderby;
      }
    } else if (!date2.equals("")){
      if(username.equals("admin")){
        query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted = l.group_id WHERE "+
-       	       "timing <= to_date('"+date2+"', 'yyyy-mm-dd')"+contains+" GROUP BY i.photo_id, i.timing " + orderby;
+       	       "timing <= to_date('"+date2+"', 'yyyy-mm-dd')"+contains+" GROUP BY i.photo_id"+groupby+ orderby;
      } else {
        query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted = l.group_id " +
       	      "WHERE (l.friend_id = '"+username+"' OR i.permitted = 1 OR i.owner_name = '"+username+"') AND timing <= to_date('"+date2+"', 'yyyy-mm-dd')"
-	      +contains+" GROUP BY i.photo_id, timing "+ orderby;
+	      +contains+" GROUP BY i.photo_id"+groupby+ orderby;
      }
    } else {
      if(username.equals("admin")){
        //FIX
-       query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted = l.group_id WHERE "+contains.substring(3)+ " GROUP BY i.photo_id, i.timing " + orderby;
+       query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted = l.group_id WHERE "+contains.substring(3)+ " GROUP BY i.photo_id" +groupby+ orderby;
      } else {
        query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted = l.group_id " +
-      	      "WHERE (l.friend_id = '"+username+"' OR i.permitted = 1 OR i.owner_name = '"+username+"') "+contains+" GROUP BY i.photo_id, timing "+ orderby;
+      	      "WHERE (l.friend_id = '"+username+"' OR i.permitted = 1 OR i.owner_name = '"+username+"') "+contains+" GROUP BY i.photo_id" + groupby+ orderby;
      }
 
    }
@@ -172,35 +175,35 @@ if (!search.equals("")){
   if (!date1.equals("") && !date2.equals("")){
      if (username.equals("admin")){
       query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted=l.group_id WHERE " +
-    	    "timing between to_date('"+date1+"', 'yyyy-mm-dd') AND to_date('"+date2+"', 'yyyy-mm-dd') GROUP BY i.photo_id,timing " + orderby;
+    	    "timing between to_date('"+date1+"', 'yyyy-mm-dd') AND to_date('"+date2+"', 'yyyy-mm-dd') GROUP BY i.photo_id"+groupby+ orderby;
     } else {
       query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted=l.group_id WHERE " +
     	    "(l.friend_id = '"+username+"' OR i.permitted = 1 OR i.owner_name = '"+username+"') AND timing between to_date('"+date1+"', 'yyyy-mm-dd') AND "+
-	    "to_date('"+date2+"', 'yyyy-mm-dd') GROUP BY i.photo_id,timing " + orderby;
+	    "to_date('"+date2+"', 'yyyy-mm-dd') GROUP BY i.photo_id"+groupby+ orderby;
     }
   } else if (!date1.equals("")){
     if (username.equals("admin")){
       query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted=l.group_id WHERE " +
-    	    "timing >= to_date('"+date1+"', 'yyyy-mm-dd') GROUP BY i.photo_id,timing " + orderby;
+    	    "timing >= to_date('"+date1+"', 'yyyy-mm-dd') GROUP BY i.photo_id"+groupby + orderby;
     } else {
       query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted=l.group_id WHERE " +
-    	    "(l.friend_id = '"+username+"' OR i.permitted = 1 OR i.owner_name = '"+username+"') AND timing >= to_date('"+date1+"', 'yyyy-mm-dd') GROUP BY i.photo_id,timing " + orderby;
+    	    "(l.friend_id = '"+username+"' OR i.permitted = 1 OR i.owner_name = '"+username+"') AND timing >= to_date('"+date1+"', 'yyyy-mm-dd') GROUP BY i.photo_id"+groupby+ orderby;
     }
   } else if (!date2.equals("")){
     if (username.equals("admin")){
       query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted=l.group_id WHERE " +
-    	    "timing <= to_date('"+date2+"', 'yyyy-mm-dd') GROUP BY i.photo_id,timing " + orderby;
+    	    "timing <= to_date('"+date2+"', 'yyyy-mm-dd') GROUP BY i.photo_id"+groupby+ orderby;
     } else {
       query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted=l.group_id WHERE " +
-    	    "(l.friend_id = '"+username+"' OR i.permitted = 1 OR i.owner_name = '"+username+"') AND timing <= to_date('"+date2+"', 'yyyy-mm-dd') GROUP BY i.photo_id,timing " + orderby;
+    	    "(l.friend_id = '"+username+"' OR i.permitted = 1 OR i.owner_name = '"+username+"') AND timing <= to_date('"+date2+"', 'yyyy-mm-dd') GROUP BY i.photo_id"+groupby+ orderby;
     }
   } else {
 
     if(username.equals("admin")){
-      query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted = l.group_id GROUP BY i.photo_id, i.timing" + orderby;
+      query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted = l.group_id GROUP BY i.photo_id"+groupby+ orderby;
     } else {
       query = "SELECT i.photo_id as photo_id FROM images i LEFT OUTER JOIN group_lists l ON i.permitted = l.group_id " +
-      	      "WHERE (l.friend_id = '"+username+"' OR i.permitted = 1 OR i.owner_name = '"+username+"') GROUP BY i.photo_id, timing "+ orderby;
+      	      "WHERE (l.friend_id = '"+username+"' OR i.permitted = 1 OR i.owner_name = '"+username+"') GROUP BY i.photo_id"+groupby+ orderby;
     }
   }
 
