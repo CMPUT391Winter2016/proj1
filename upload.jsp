@@ -90,71 +90,81 @@ conn.setAutoCommit(false);
  } catch(Exception ex){ out.println("" + ex.getMessage() + "");
 	 }
 
-
-
+String error = "false", err_m="";
+try{
 FileItem file = null;
 
 for(int j =0; j<files.size(); j++){
 
-file = (FileItem) files.get(j);
-Statement stmt = conn.createStatement();
+  file = (FileItem) files.get(j);
+  Statement stmt = conn.createStatement();
 
 
-InputStream instream = file.getInputStream();
-InputStream instream2 = file.getInputStream();
+  InputStream instream = file.getInputStream();
+  InputStream instream2 = file.getInputStream();
 
-BufferedImage img = ImageIO.read(instream2);
-int factor = 10;
-int w = img.getWidth()/factor;
-int h = img.getHeight()/factor;
-BufferedImage shrunkImg = new BufferedImage(w, h, img.getType());
-for (int y=0; y < h; ++y)
-    for (int x=0; x < w; ++x)
-    	shrunkImg.setRGB(x, y, img.getRGB(x*factor, y*factor));
-
-
-
-ResultSet rset1 = stmt.executeQuery("SELECT pic_id_sequence.nextval from dual");
-rset1.next();
-photo_id = rset1.getInt(1);
-
-String userName = session.getAttribute("userName").toString();
+  BufferedImage img = ImageIO.read(instream2);
+  int factor = 10;
+  int w = img.getWidth()/factor;
+  int h = img.getHeight()/factor;
+  BufferedImage shrunkImg = new BufferedImage(w, h, img.getType());
+  for (int y=0; y < h; ++y){
+      for (int x=0; x < w; ++x) {
+    	  shrunkImg.setRGB(x, y, img.getRGB(x*factor, y*factor));
+}}
 
 
-stmt.execute("INSERT INTO images values("+photo_id+",'"+userName+"', "+group_id+", '"+subject+"', '"+location+"', to_date('"+date+"', 'yyyy-mm-dd'), '"+description+"', empty_blob(), empty_blob())");
-ResultSet rset = stmt.executeQuery("SELECT * from images where photo_id = "+photo_id+" for update");
-rset.next();
-BLOB thumbnail = ((OracleResultSet)rset).getBLOB(8);
-BLOB image = ((OracleResultSet)rset).getBLOB(9);
+  ResultSet rset1 = stmt.executeQuery("SELECT pic_id_sequence.nextval from dual");
+  rset1.next();
+  photo_id = rset1.getInt(1);
 
-OutputStream outstream = image.getBinaryOutputStream();
-OutputStream outstream2 = thumbnail.getBinaryOutputStream();
-ImageIO.write(shrunkImg, "jpg", outstream2);
+  String userName = session.getAttribute("userName").toString();
 
-int size = image.getBufferSize();
-byte[] buffer = new byte[size];
-int length = -1;
-while( (length = instream.read(buffer)) !=-1)
-{ 
-outstream.write(buffer, 0, length);
 
+  stmt.execute("INSERT INTO images values("+photo_id+",'"+userName+"', "+group_id+", '"+subject+"', '"+location+"', to_date('"+date+"', 'yyyy-mm-dd'), '"+description+"', empty_blob(), empty_blob())");
+  ResultSet rset = stmt.executeQuery("SELECT * from images where photo_id = "+photo_id+" for update");
+  rset.next();
+  BLOB thumbnail = ((OracleResultSet)rset).getBLOB(8);
+  BLOB image = ((OracleResultSet)rset).getBLOB(9);
+
+  OutputStream outstream = image.getBinaryOutputStream();
+  OutputStream outstream2 = thumbnail.getBinaryOutputStream();
+  ImageIO.write(shrunkImg, "jpg", outstream2);
+
+  int size = image.getBufferSize();
+  byte[] buffer = new byte[size];
+  int length = -1;
+  while( (length = instream.read(buffer)) !=-1){ 
+    outstream.write(buffer, 0, length);
+  }
+  instream.close();
+  instream2.close();
+  outstream.close();
+  outstream2.close();
+  
 }
-instream.close();
-instream2.close();
-outstream.close();
-outstream2.close();
-stmt.executeUpdate("commit");
-
-
+} catch (Exception ex) {
+  
+  error = "true";
+  err_m=ex.getMessage();
+} finally{
+  if (error.equals("false")){
+  out.println("<h1>Upload Succesful!");
+  conn.commit();
+  } else {
+  out.println("<h1>Something went wrong...");
+  out.println("<p>"+err_m);
+  conn.rollback();
+  }
+  conn.close();
 }
-conn.close();
 
 %>
 
 
 
-<body>
-<h1>Upload Successful!
+
+
 <br>
 <a href="success.jsp">Home</a>
 
