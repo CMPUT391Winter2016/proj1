@@ -6,6 +6,27 @@
 </head>
 <body>
 
+<%
+String username = session.getAttribute("userName").toString();
+
+
+String date1 = "", date2="", search="", dropdown="";
+
+if (request.getParameter("date1") != null){
+   date1 = request.getParameter("date1").trim();
+}
+if (request.getParameter("date2") != null){
+   date2 = request.getParameter("date2").trim();
+}
+if (request.getParameter("search") != null){
+   search = request.getParameter("search");
+}
+if (request.getParameter("orderby") != null){
+   dropdown = request.getParameter("orderby");
+}
+
+%>
+
 
 
 
@@ -76,13 +97,26 @@ $(function(){
 <td>Date Ranges
 <td>Order By
 <tr>
-<td><input type='test' placeholder='Search' name='search'>
-<td><input type='date' id = 'date1' name='date1'>-<input type='date' id = 'date2' name='date2'>
-<td><select name='orderby'>
-	    <option value='recent'>Recent
-	    <option value='oldest'>Oldest
-	    <option value='relevance'>Relevance
-</select>
+<%
+out.println("<td><input type='test' placeholder='Search' name='search' value='"+search+"'>");
+out.println("<td><input type='date' id = 'date1' name='date1' value='"+date1+"'>-<input type='date' id = 'date2' name='date2' value='"+date2+"'>");
+out.println("<td><select name='orderby'>");
+if (dropdown.equals("recent") || dropdown.equals("")){
+  out.println("<option value='recent' selected>Recent");
+  out.println("<option value='oldest'>Oldest");
+  out.println("<option value='relevance'>Relevance");
+} else if (dropdown.equals("oldest")){
+  out.println("<option value='recent'>Recent");
+  out.println("<option value='oldest' selected>Oldest");
+  out.println("<option value='relevance'>Relevance");
+} else {
+  out.println("<option value='recent'>Recent");
+  out.println("<option value='oldest'>Oldest");
+  out.println("<option value='relevance' selected>Relevance");
+}
+out.println("</select>");
+
+%>
 </table>
 <input type='submit'>
 </form>
@@ -113,23 +147,7 @@ return;
 
 
 
-String username = session.getAttribute("userName").toString();
 
-
-String date1 = "", date2="", search="", dropdown="";
-
-if (request.getParameter("date1") != null){
-   date1 = request.getParameter("date1").trim();
-}
-if (request.getParameter("date2") != null){
-   date2 = request.getParameter("date2").trim();
-}
-if (request.getParameter("search") != null){
-   search = request.getParameter("search");
-}
-if (request.getParameter("orderby") != null){
-   dropdown = request.getParameter("orderby");
-}
 
 
 //Set the type of orderby
