@@ -8,7 +8,6 @@ Clone this repo into your webapps folder in catalina. Make sure to create a copy
 * signup.jsp
 * success.jsp - A user's home page, stub for now.  
   
-Needed for Search:  
 
   
 ##Resources
