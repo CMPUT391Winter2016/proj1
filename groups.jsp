@@ -88,27 +88,33 @@ out.println("you don't have groups yet!");
 
 
 Statement statement2 = conn.createStatement();
+Statement statement3 = conn.createStatement();
 
-ResultSet resultset2 = statement.executeQuery("select DISTINCT g1.group_name AS group_name from groups g1, group_lists g2 where g2.friend_id = '"+userName+"' AND g1.group_id = g2.group_id OR g1.user_name = '" +userName+ "'");
+
+ResultSet resultset2 = statement2.executeQuery("select group_id from group_lists where friend_id='"+userName+"'");
 out.println("<br><br><br>");
 out.println("<br><b><i>Groups you are in: </i></b><br>");
-if (!resultset2.next()){
-out.println("<br>You're not in any groups yet!");
-}
-else{
+//if (!resultset2.next()){
+//out.println("<br>You're not in any groups yet!");
+//}
+//else{
 
 %>
 
         <TABLE BORDER="1">
             <TR>
                 <TH><font color = "brown" size = "2" >Group Name</font></TH>
-
+                <TH><font color = "brown" size = "2" >Group Owner</font></TH>
             </TR>
-            <TD> <%= resultset2.getString("group_name") %></td>
-            <% while(resultset2.next()){ %>
-            <TR>
-                <TD> <%= resultset2.getString("group_name") %></td>
 
+            <% while(resultset2.next()){
+                 int groupID=resultset2.getInt(1);
+                 ResultSet resultset3 = statement3.executeQuery("select group_name,user_name from groups where group_id="+groupID+" ");
+                 resultset3.next();
+            %> 
+            <TR>
+                <TD> <%= resultset3.getString("group_name") %></td>
+                <TD> <%= resultset3.getString("user_name") %></td>
             </TR>
             <% } %>
         </TABLE>
@@ -116,7 +122,7 @@ else{
   <%
 
 
-}
+
 
 
 resultset.close();
