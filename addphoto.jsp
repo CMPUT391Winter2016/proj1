@@ -60,7 +60,44 @@ rset = stmt.executeQuery(sql);
 <tr bgcolor="#FFFFFF">
 <td>
 
+<script type="text/javascript">
 
+/*
+Code for creating a calender in javascript for date selection, if browser doesn't support HTML5: JavascriptKit: http://www.javascriptkit.com/javatutors/createelementcheck2.shtml
+
+Changing a javascript date picker into yyyy-mm-dd format: StackOverFlow user Pete Naylor: http://stackoverflow.com/questions/16025441/jquery-datepicker-change-date-format-to-yyyy-mm-dd-php
+
+
+*/
+    var datefield=document.createElement("input")
+    datefield.setAttribute("type", "date")
+    if (datefield.type!="date"){ //if browser doesn't support input type="date", load files for jQuery UI Date Picker
+        document.write('<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />\n')
+        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n')
+        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n') 
+    }
+</script>
+ 
+<script>
+if (datefield.type!="date"){ //if browser doesn't support input type="date", initialize date picker widget:
+    jQuery(function($){ //on document.ready
+        //$('#date1').datepicker();
+	
+
+    })
+}
+
+$(function(){
+    $("#date").datepicker({ dateFormat: 'yy-mm-dd' });
+    $("#date").datepicker({ dateFormat: 'yy-mm-dd' }).bind("change",function(){
+        var minValue = $(this).val();
+        minValue = $.datepicker.parseDate("yy-mm-dd", minValue);
+        minValue.setDate(minValue.getDate());
+        
+    })
+});
+
+</script>
 
 <form name="upload" method="post" action="upload.jsp" enctype="multipart/form-data">
 <table>
@@ -74,7 +111,7 @@ rset = stmt.executeQuery(sql);
 </tr>
 <tr>
 <td>Date:</td>
-<td><input name = "date" type = "date" required></td>
+<td><input name = "date" id = "date" type = "date" required></td>
 </tr>
 <tr>
 <td>Visibility:</td>

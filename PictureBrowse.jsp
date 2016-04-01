@@ -28,6 +28,47 @@
 <tr bgcolor="#FFFFFF">
 <td>
 
+
+<script type="text/javascript">
+
+/*
+Code for creating a calender in javascript for date selection, if browser doesn't support HTML5: JavascriptKit: http://www.javascriptkit.com/javatutors/createelementcheck2.shtml
+
+Changing a javascript date picker into yyyy-mm-dd format: StackOverFlow user Pete Naylor: http://stackoverflow.com/questions/16025441/jquery-datepicker-change-date-format-to-yyyy-mm-dd-php
+
+
+*/
+    var datefield=document.createElement("input")
+    datefield.setAttribute("type", "date")
+    if (datefield.type!="date"){ //if browser doesn't support input type="date", load files for jQuery UI Date Picker
+        document.write('<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />\n')
+        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n')
+        document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n') 
+    }
+</script>
+ 
+<script>
+if (datefield.type!="date"){ //if browser doesn't support input type="date", initialize date picker widget:
+    jQuery(function($){ //on document.ready
+        //$('#date1').datepicker();
+	//$('#date2').datepicker();
+
+    })
+}
+
+$(function(){
+    $("#date1").datepicker({ dateFormat: 'yy-mm-dd' });
+    $("#date2").datepicker({ dateFormat: 'yy-mm-dd' }).bind("change",function(){
+        var minValue = $(this).val();
+        minValue = $.datepicker.parseDate("yy-mm-dd", minValue);
+        minValue.setDate(minValue.getDate());
+        //$("#date1").datepicker( "option", "minDate", minValue );
+    })
+});
+
+</script>
+
+
 <table border='1px'>
 <form action='PictureBrowse.jsp' method='post' name='searchform'>
 
@@ -36,7 +77,7 @@
 <td>Order By
 <tr>
 <td><input type='test' placeholder='Search' name='search'>
-<td><input type='date' name='date1'>-<input type='date' name='date2'>
+<td><input type='date' id = 'date1' name='date1'>-<input type='date' id = 'date2' name='date2'>
 <td><select name='orderby'>
 	    <option value='recent'>Recent
 	    <option value='oldest'>Oldest
