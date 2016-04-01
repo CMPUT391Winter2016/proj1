@@ -2,7 +2,7 @@
 <head>
 <title>Photo Upload</title>
 </head>
-
+<body>
 <table border="1" width = "1650" height = "1000" cellpadding = "15" cellspacing = "10" bgcolor="#bedbeb">
 
 <tr bgcolor="#FFFFFF">
@@ -51,7 +51,7 @@ while (i.hasNext())
 	} else if (temp.getFieldName().equals("date"))
 	{
 	  date = temp.getString();
-	  out.println(date);
+	  
 	} else if(temp.getFieldName().equals("group"))
 	{
 	  group_id = Integer.parseInt(temp.getString());
@@ -60,7 +60,7 @@ while (i.hasNext())
 	else
 	{
 	files.add(temp);
-	out.println("File");
+	
 	}
 	
 	temp = (FileItem) i.next();
@@ -91,11 +91,11 @@ conn.setAutoCommit(false);
 	 }
 
 
-out.println(files.size());
+
 FileItem file = null;
 
 for(int j =0; j<files.size(); j++){
-out.println("Got here");
+
 file = (FileItem) files.get(j);
 Statement stmt = conn.createStatement();
 
@@ -113,7 +113,7 @@ for (int y=0; y < h; ++y)
     	shrunkImg.setRGB(x, y, img.getRGB(x*factor, y*factor));
 
 
-out.println("<p>"+file.getSize()+"</p>");
+
 ResultSet rset1 = stmt.executeQuery("SELECT pic_id_sequence.nextval from dual");
 rset1.next();
 photo_id = rset1.getInt(1);
@@ -137,7 +137,7 @@ int length = -1;
 while( (length = instream.read(buffer)) !=-1)
 { 
 outstream.write(buffer, 0, length);
-out.println("<p>"+size+"</p>");
+
 }
 instream.close();
 instream2.close();
@@ -148,11 +148,14 @@ stmt.executeUpdate("commit");
 
 }
 conn.close();
+
 %>
 
 
 
 <body>
+<h1>Upload Successful!
+<br>
 <a href="success.jsp">Home</a>
 
 
