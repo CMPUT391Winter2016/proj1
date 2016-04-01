@@ -399,7 +399,7 @@ if(!owner_option.equals("") && !subject_option.equals("") && !date_option.equals
 
 
 
-out.println(query);
+//out.println(query);
 
 try{ 
 stmt = conn.createStatement();
