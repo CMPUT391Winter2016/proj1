@@ -70,19 +70,17 @@ session.setAttribute( "GtoEdit", groupName );
 Integer groupID;
 
 ResultSet resultset = statement.executeQuery("select group_id from groups where group_name = '"+groupName+"' and user_name='"+userName+"'");
-
+//check if the group name entered is vaild
 if (!resultset.next()){
 out.println("group name not found");
-
-
 
 }else{
 
 groupID=((Number) resultset.getObject(1)).intValue();
 Statement statement2 = conn.createStatement();
 ResultSet resultset2 = statement2.executeQuery("select friend_id from group_lists where group_id = '"+groupID+"'");
-
-if (!resultset2.next()){
+//to list the users in the group
+if (!resultset2.next()){ //if no users added, print message and have the option to add users.
 out.println("no users added to the group.");
  %>
 <br>
@@ -94,7 +92,7 @@ write user name to add:
 <br>
 <font size = "2"><i> <a href = "success.jsp">Home page.</i></font></a>
 <%
-}else{
+}else{//if there is users in the group, list them
  %>
 
 

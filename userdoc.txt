@@ -9,7 +9,7 @@ How to install:
     e. indexes.sql, indexes2.sql, indexes3.sql, indexes4.sql
 2.  Put all the html and jsp files into the same folder (eg. proj1) inside catalina/webapps
 3.  Inside this folder create a folder 'WEB-INF' and then a folder 'lib' within that. Place both jar files (ojdbc6.jar and commons-fileupload-1.0.jar) in 'lib'
-3.  Start using the website by going to /auth.html using the required url information for your lab machine in your browser (port 16610)
+3.  Start using the website by going to /auth.html using the required url information for your lab machine in your browser
 4.  Input a valid sqlplus account and enjoy!
 
 
