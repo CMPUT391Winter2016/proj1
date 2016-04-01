@@ -76,7 +76,7 @@ stmt = conn.createStatement();
 rset = stmt.executeQuery(user_check);
 } catch(Exception ex){ out.println("broke" + ex.getMessage() + "");
 	 }
-
+//check if the user name edntered is in the system
 if(!rset.next()){ 
   out.println("no user with this name found");
 
@@ -89,7 +89,7 @@ if(!rset.next()){
      rset2.next();
      } catch(Exception ex){ out.println("broke" + ex.getMessage() + "");
 	 }
-
+//if the user name in the system, check if it's in the group list or not
         group_id= rset2.getInt(1);
         String user_check2 = "select friend_id from group_lists where friend_id='"+groupUser+"' and group_id="+group_id+" ";
         try{ 
@@ -101,7 +101,7 @@ if(!rset.next()){
          if(rset3.next()){ 
             out.println("user already in the group");
          }else{
-
+//if not in the group list, add the user name
  
           String addstring = "insert into group_lists values("+group_id+" ,'" +groupUser+ "', SYSDATE, null)";
           stmt3 = conn.createStatement();        
@@ -163,7 +163,7 @@ String groupId = "select group_id from groups where group_name ='"+groupName+"' 
      } catch(Exception ex){ out.println("broke" + ex.getMessage() + "");
 	 }
 
-
+//check if the user name enter is in the group list or not
 group_id= rset2.getInt(1);
 String user_check2 = "select friend_id from group_lists where friend_id='"+groupUser+"' and group_id="+group_id+" ";
      try{ 
@@ -176,7 +176,7 @@ String user_check2 = "select friend_id from group_lists where friend_id='"+group
             out.println("user is already not in the group");
          }else{
 
- 
+ //if the group name entered is in the group list, delete the user name from the group list
           String addstring = "delete from group_lists where group_id="+group_id+" and friend_id= '"+groupUser+"' ";
           stmt3 = conn.createStatement();        
           stmt3.executeUpdate(addstring);
