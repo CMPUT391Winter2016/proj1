@@ -68,7 +68,7 @@ out.println("you don't have groups yet!");
 
         <TABLE BORDER="1">
             <TR>
-                <TH><font color = "brown" >group name</font></TH>
+                <TH><font color = "brown" >Group Name</font></TH>
 
             </TR>
             <TD> <%= resultset.getString("group_name") %></td>
@@ -80,7 +80,7 @@ out.println("you don't have groups yet!");
             <% } %>
         </TABLE>
 <br>
-<font size = "2"><i>enter the group name you want to edit.</i></font>
+<font size = "2"><i>Enter the group name you want to edit.</i></font>
 <br>
 <input type="text" value = "" name="gname"></input>
 <input type = "submit" value = "edit"  name = "editgroup"></input>
@@ -90,7 +90,8 @@ out.println("you don't have groups yet!");
 Statement statement2 = conn.createStatement();
 
 ResultSet resultset2 = statement.executeQuery("select DISTINCT g1.group_name AS group_name from groups g1, group_lists g2 where g2.friend_id = '"+userName+"' AND g1.group_id = g2.group_id OR g1.user_name = '" +userName+ "'");
-out.println("<br><b>Groups you are in: </b><br>");
+out.println("<br><br><br>");
+out.println("<br><b><i>Groups you are in: </i></b><br>");
 if (!resultset2.next()){
 out.println("<br>You're not in any groups yet!");
 }
@@ -100,7 +101,7 @@ else{
 
         <TABLE BORDER="1">
             <TR>
-                <TH><font color = "brown" >group name</font></TH>
+                <TH><font color = "brown" size = "2" >Group Name</font></TH>
 
             </TR>
             <TD> <%= resultset2.getString("group_name") %></td>
