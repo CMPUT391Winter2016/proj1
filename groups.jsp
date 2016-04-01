@@ -87,6 +87,37 @@ out.println("you don't have groups yet!");
   <% }
 
 
+Statement statement2 = conn.createStatement();
+
+ResultSet resultset2 = statement.executeQuery("select DISTINCT g1.group_name AS group_name from groups g1, group_lists g2 where g2.friend_id = '"+userName+"' AND g1.group_id = g2.group_id OR g1.user_name = '" +userName+ "'");
+out.println("<br><b>Groups you are in: </b><br>");
+if (!resultset2.next()){
+out.println("<br>You're not in any groups yet!");
+}
+else{
+
+%>
+
+        <TABLE BORDER="1">
+            <TR>
+                <TH><font color = "brown" >group name</font></TH>
+
+            </TR>
+            <TD> <%= resultset2.getString("group_name") %></td>
+            <% while(resultset2.next()){ %>
+            <TR>
+                <TD> <%= resultset2.getString("group_name") %></td>
+
+            </TR>
+            <% } %>
+        </TABLE>
+<br>
+  <%
+
+
+}
+
+
 resultset.close();
 statement.close();
 conn.close();
