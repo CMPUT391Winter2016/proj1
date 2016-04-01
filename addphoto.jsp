@@ -129,7 +129,7 @@ $(function(){
 <tr>
 <td>Location:</td>
 <td><input name = "location" placeholder = "Location" type =
-	   "text"></td>
+	   "text" required></td>
 <tr>
 <td>Description:</td>
 <td><textarea name = "description" rows = "10" cols ="30"></textarea></td>

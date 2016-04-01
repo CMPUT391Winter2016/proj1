@@ -1,6 +1,10 @@
 <%@ page import="java.sql.*" %> 
 
 <%
+if (request.getParameter("dsubmit")==null ){
+   response.setStatus(response.SC_MOVED_TEMPORARILY);
+   response.setHeader("Location", "success.jsp");
+} else {
    String photo_id = request.getQueryString();
 
 //establish the connection to the underlying database
@@ -49,4 +53,5 @@ stmt.executeQuery(sql);
 <% conn.close();
 response.setStatus(response.SC_MOVED_TEMPORARILY);
    response.setHeader("Location", "PictureBrowse.jsp");
+}
  %>
